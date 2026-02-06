@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Revision seleccion unica')"></head>
+<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+  <div class="min-h-screen">
+    <header th:replace="fragments/layout :: header"></header>
+
+    <main class="section">
+      <div class="container-app">
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 class="section-title">Revision de respuestas</h1>
+            <p class="section-subtitle">
+              Aciertos: <span th:text="${correctCount}">0</span> |
+              Fallos: <span th:text="${incorrectCount}">0</span> |
+              Total: <span th:text="${total}">0</span>
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a class="btn btn-secondary" th:href="@{/sc/sequence}" href="/sc/sequence">Volver a secuencia</a>
+            <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Inicio</a>
+          </div>
+        </div>
+
+        <div class="card-solid p-6">
+          <div class="overflow-x-auto">
+            <table class="table-modern">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Pregunta</th>
+                  <th>Tu respuesta</th>
+                  <th>Correcta</th>
+                  <th>Resultado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item, iter : ${items}">
+                  <td th:text="${iter.index + 1}">1</td>
+                  <td th:text="${item.question != null ? item.question.statement : 'Pregunta no disponible'}">Texto</td>
+                  <td>
+                    <span class="chip" th:classappend="${item.userAnswer != null} ? ' bg-sky-100 text-sky-700' : ' bg-amber-100 text-amber-700'">
+                      <span th:text="${item.userAnswer != null ? (item.userAnswer + 1) : 'Sin respuesta'}">1</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="chip" th:if="${item.question != null}">
+                      <span th:text="${item.question.correctIndex != null ? (item.question.correctIndex + 1) : '-'}">1</span>
+                    </span>
+                  </td>
+                  <td>
+                    <span class="chip" th:classappend="${item.correct} ? ' bg-emerald-100 text-emerald-700' : ' bg-amber-100 text-amber-700'">
+                      <span th:text="${item.correct ? 'Correcto' : 'Incorrecto'}">Correcto</span>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Preguntas V/F')"></head>
+<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+  <div class="min-h-screen">
+    <header th:replace="fragments/layout :: header"></header>
+
+    <main class="section">
+      <div class="container-app">
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 class="section-title">Preguntas Verdadero / Falso</h1>
+            <p class="section-subtitle">Administra, revisa y responde preguntas en un solo lugar.</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <a class="btn btn-primary" th:href="@{/vf/questions/new}" href="/vf/questions/new">Nueva pregunta</a>
+            <a class="btn btn-secondary" th:href="@{/vf/play/random}" href="/vf/play/random">Aleatoria</a>
+            <a class="btn btn-secondary" th:href="@{/vf/sequence/start}" href="/vf/sequence/start">Secuencia</a>
+            <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Volver a inicio</a>
+          </div>
+        </div>
+
+        <div th:if="${success}" class="mb-4 rounded-2xl border border-emerald-200 bg-emerald-100 px-4 py-3 text-sm text-emerald-700">
+          <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="mb-4 rounded-2xl border border-amber-200 bg-amber-100 px-4 py-3 text-sm text-amber-700">
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="card-solid p-6">
+          <div th:if="${#lists.isEmpty(questions)}" class="text-sm text-slate-600">
+            No hay preguntas registradas. Crea la primera para comenzar.
+          </div>
+          <div th:if="${!#lists.isEmpty(questions)}" class="overflow-x-auto">
+            <table class="table-modern">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Pregunta</th>
+                  <th>Correcta</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="q : ${questions}">
+                  <td th:text="${q.id}">1</td>
+                  <td th:text="${q.statement}">Texto</td>
+                  <td>
+                    <span class="chip" th:classappend="${q.correctAnswer} ? ' bg-emerald-100 text-emerald-700' : ' bg-amber-100 text-amber-700'">
+                      <span th:text="${q.correctAnswer} ? 'Verdadero' : 'Falso'">Verdadero</span>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="flex flex-wrap gap-2">
+                      <a class="btn btn-secondary" th:href="@{/vf/questions/{id}(id=${q.id})}" href="#">Ver</a>
+                      <a class="btn btn-ghost" th:href="@{/vf/questions/{id}/edit(id=${q.id})}" href="#">Editar</a>
+                      <form th:action="@{/vf/questions/{id}/delete(id=${q.id})}" method="post">
+                        <div th:replace="fragments/forms :: csrf"></div>
+                        <button class="btn btn-ghost" type="submit">Eliminar</button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+  </div>
+</body>
+</html>

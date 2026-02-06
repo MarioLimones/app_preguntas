@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="head(title)">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Preguntas Visual</title>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}" href="/css/tailwind.css" />
+  </head>
+
+  <body>
+    <header
+      th:fragment="header"
+      class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur"
+    >
+      <div class="container-app flex items-center justify-between py-4">
+        <a
+          class="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.28em] text-slate-700"
+          th:href="@{/#inicio}"
+          href="/#inicio"
+        >
+          <span
+            class="flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-soft"
+          >
+            <img
+              th:src="@{/img/logo.svg}"
+              src="/img/logo.svg"
+              alt="Preguntas Visual"
+              class="h-7 w-7"
+            />
+          </span>
+          Preguntas Visual
+        </a>
+        <nav class="hidden items-center gap-6 md:flex">
+          <a class="nav-link" th:href="@{/#inicio}" href="/#inicio">Inicio</a>
+          <a class="nav-link" th:href="@{/vf/questions}" href="/vf/questions">Preguntas V/F</a>
+          <a class="nav-link" th:href="@{/vf/questions/new}" href="/vf/questions/new">Nueva</a>
+          <a class="nav-link" th:href="@{/vf/play/random}" href="/vf/play/random">Aleatoria</a>
+          <a class="nav-link" th:href="@{/vf/sequence/start}" href="/vf/sequence/start">Secuencia</a>
+          <a class="nav-link" th:href="@{/vf/sequence/review}" href="/vf/sequence/review">Revision</a>
+          <a class="nav-link" th:href="@{/sc/questions}" href="/sc/questions">Seleccion unica</a>
+          <a class="nav-link" th:href="@{/#features}" href="/#features">Funciones</a>
+        </nav>
+        <a class="btn btn-primary hidden md:inline-flex" th:href="@{/vf/questions}" href="/vf/questions">Ver preguntas</a>
+      </div>
+    </header>
+
+    <footer
+      th:fragment="footer"
+      class="border-t border-slate-200/70 bg-white/70 py-8"
+    >
+      <div
+        class="container-app flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-500"
+      >
+        <span>Preguntas Visual</span>
+        <span>Hecho para equipos que aprenden rapido.</span>
+      </div>
+    </footer>
+  </body>
+</html>

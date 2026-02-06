@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head(${mode} == 'edit' ? 'Editar pregunta de seleccion unica' : 'Nueva pregunta de seleccion unica')"></head>
+<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+  <div class="min-h-screen">
+    <header th:replace="fragments/layout :: header"></header>
+
+    <main class="section">
+      <div class="container-app">
+        <div class="mb-8">
+          <h1 class="section-title" th:text="${mode} == 'edit' ? 'Editar pregunta' : 'Crear pregunta'">Crear pregunta</h1>
+          <p class="section-subtitle">Escribe la pregunta, las opciones y marca la correcta.</p>
+        </div>
+
+        <div class="card-solid p-6">
+          <form th:action="${mode} == 'edit' ? @{/sc/questions/{id}(id=${id})} : @{/sc/questions}"
+                th:object="${form}" method="post" class="space-y-2">
+            <div th:replace="fragments/forms :: csrf"></div>
+
+            <div>
+              <label class="text-sm font-semibold text-slate-700">Enunciado</label>
+              <textarea class="mt-2 w-full rounded-2xl border border-slate-200 p-3 text-sm"
+                        th:field="*{statement}" rows="4" placeholder="Escribe la pregunta"></textarea>
+              <div class="mt-2 text-xs text-amber-700" th:if="${#fields.hasErrors('statement')}" th:errors="*{statement}"></div>
+            </div>
+
+            <div class="mt-4">
+              <label class="text-sm font-semibold text-slate-700">Opciones (una por linea)</label>
+              <textarea class="mt-2 w-full rounded-2xl border border-slate-200 p-3 text-sm"
+                        th:field="*{optionsText}" rows="6" placeholder="Opcion 1&#10;Opcion 2&#10;Opcion 3"></textarea>
+              <div class="mt-2 text-xs text-amber-700" th:if="${#fields.hasErrors('optionsText')}" th:errors="*{optionsText}"></div>
+            </div>
+
+            <div class="mt-4">
+              <label class="text-sm font-semibold text-slate-700">Numero de opcion correcta (1..n)</label>
+              <input class="mt-2 w-full rounded-2xl border border-slate-200 p-3 text-sm"
+                     type="number" min="1" th:field="*{correctIndex}" placeholder="1" />
+              <div class="mt-2 text-xs text-amber-700" th:if="${#fields.hasErrors('correctIndex')}" th:errors="*{correctIndex}"></div>
+            </div>
+
+            <div class="mt-4">
+              <label class="text-sm font-semibold text-slate-700">Explicacion (opcional)</label>
+              <textarea class="mt-2 w-full rounded-2xl border border-slate-200 p-3 text-sm"
+                        th:field="*{explanation}" rows="3" placeholder="Contexto o explicacion"></textarea>
+            </div>
+
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button class="btn btn-primary" type="submit" th:text="${mode} == 'edit' ? 'Guardar cambios' : 'Crear pregunta'">
+                Crear pregunta
+              </button>
+              <a class="btn btn-secondary" th:href="@{/sc/questions}" href="/sc/questions">Volver al listado</a>
+              <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Volver a inicio</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+  </div>
+</body>
+</html>

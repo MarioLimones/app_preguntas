@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/layout :: head('Detalle de seleccion unica')"></head>
-<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+<body class="app-bg text-slate-100">
   <div class="min-h-screen">
     <header th:replace="fragments/layout :: header"></header>
 
@@ -19,8 +19,8 @@
         </div>
 
         <div class="card p-6">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Pregunta #<span th:text="${question.id}">1</span></p>
-          <h2 class="mt-3 text-lg font-semibold text-slate-900" th:text="${question.statement}">Enunciado</h2>
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Pregunta #<span th:text="${question.id}">1</span></p>
+          <h2 class="mt-3 text-lg font-semibold text-slate-100" th:text="${question.statement}">Enunciado</h2>
           <div class="mt-4 flex flex-wrap gap-2">
             <span class="chip" th:if="${question.explanation != null and !#strings.isEmpty(question.explanation)}">
               <span th:text="${question.explanation}">Explicacion</span>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="mt-6 card-solid p-6">
-          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Opciones</h3>
+          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Opciones</h3>
           <ul class="mt-3 space-y-2">
             <li class="list-item" th:each="opt, idx : ${question.options}">
               <span th:text="${idx.index + 1} + '. ' + opt">Opcion</span>
@@ -39,7 +39,7 @@
         </div>
 
         <div class="mt-6 card-solid p-6">
-          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Responder</h3>
+          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Responder</h3>
           <form class="mt-4" th:action="@{/sc/questions/{id}/answer(id=${question.id})}" th:object="${answerForm}" method="post">
             <div th:replace="fragments/forms :: csrf"></div>
             <div class="space-y-2">
@@ -48,7 +48,7 @@
                 <span th:text="${opt}">Opcion</span>
               </label>
             </div>
-            <div class="mt-2 text-xs text-amber-700" th:if="${#fields.hasErrors('selectedIndex')}" th:errors="*{selectedIndex}"></div>
+            <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('selectedIndex')}" th:errors="*{selectedIndex}"></div>
             <div class="mt-4 flex flex-wrap gap-2">
               <button class="btn btn-primary" type="submit">Validar respuesta</button>
               <a class="btn btn-secondary" th:href="@{/sc/questions/{id}/edit(id=${question.id})}" href="#">Editar</a>
@@ -57,7 +57,7 @@
 
           <div class="mt-4" th:if="${result != null}">
             <div class="rounded-2xl border px-4 py-3 text-sm"
-                 th:classappend="${result} ? ' border-emerald-200 bg-emerald-100 text-emerald-700' : ' border-amber-200 bg-amber-100 text-amber-700'">
+                 th:classappend="${result} ? ' border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : ' border-amber-400/30 bg-amber-500/10 text-amber-200'">
               <span th:text="${result} ? 'Correcto' : 'Incorrecto'">Correcto</span>
               <span class="ml-2" th:text="'Tu respuesta: ' + (${answerValue} != null ? (answerValue + 1) : '-')">Tu respuesta</span>
             </div>
@@ -78,3 +78,5 @@
   </div>
 </body>
 </html>
+
+

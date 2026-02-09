@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head('Preguntas V/F')"></head>
+<head th:replace="fragments/layout :: head('Preguntas Seleccion Multiple')"></head>
 <body class="app-bg text-slate-100">
   <div class="min-h-screen">
     <header th:replace="fragments/layout :: header"></header>
@@ -9,13 +9,13 @@
       <div class="container-app">
         <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 class="section-title">Preguntas Verdadero / Falso</h1>
-            <p class="section-subtitle">Administra, revisa y responde preguntas en un solo lugar.</p>
+            <h1 class="section-title">Preguntas de Seleccion Multiple</h1>
+            <p class="section-subtitle">Administra preguntas con varias opciones y multiples correctas.</p>
           </div>
           <div class="flex flex-wrap gap-2">
-            <a class="btn btn-primary" th:href="@{/vf/questions/new}" href="/vf/questions/new">Nueva pregunta</a>
-            <a class="btn btn-secondary" th:href="@{/vf/play/random}" href="/vf/play/random">Aleatoria</a>
-            <a class="btn btn-secondary" th:href="@{/vf/sequence/start}" href="/vf/sequence/start">Secuencia</a>
+            <a class="btn btn-primary" th:href="@{/mc/questions/new}" href="/mc/questions/new">Nueva pregunta</a>
+            <a class="btn btn-secondary" th:href="@{/mc/play/random}" href="/mc/play/random">Aleatoria</a>
+            <a class="btn btn-secondary" th:href="@{/mc/sequence/start}" href="/mc/sequence/start">Secuencia</a>
             <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Volver a inicio</a>
           </div>
         </div>
@@ -37,7 +37,8 @@
                 <tr>
                   <th>ID</th>
                   <th>Pregunta</th>
-                  <th>Correcta</th>
+                  <th>Opciones</th>
+                  <th>Correctas</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -46,15 +47,20 @@
                   <td th:text="${q.id}">1</td>
                   <td th:text="${q.statement}">Texto</td>
                   <td>
-                    <span class="chip" th:classappend="${q.correctAnswer} ? ' bg-emerald-500/10 text-emerald-200' : ' bg-amber-500/10 text-amber-200'">
-                      <span th:text="${q.correctAnswer} ? 'Verdadero' : 'Falso'">Verdadero</span>
+                    <span class="chip">
+                      <span th:text="${q.options != null ? q.options.size() : 0}">0</span> opciones
+                    </span>
+                  </td>
+                  <td>
+                    <span class="chip">
+                      <span th:text="${q.correctIndexes != null ? q.correctIndexes.size() : 0}">0</span> correctas
                     </span>
                   </td>
                   <td>
                     <div class="flex flex-wrap gap-2">
-                      <a class="btn btn-secondary" th:href="@{/vf/questions/{id}(id=${q.id})}" href="#">Ver</a>
-                      <a class="btn btn-ghost" th:href="@{/vf/questions/{id}/edit(id=${q.id})}" href="#">Editar</a>
-                      <form th:action="@{/vf/questions/{id}/delete(id=${q.id})}" method="post">
+                      <a class="btn btn-secondary" th:href="@{/mc/questions/{id}(id=${q.id})}" href="#">Ver</a>
+                      <a class="btn btn-ghost" th:href="@{/mc/questions/{id}/edit(id=${q.id})}" href="#">Editar</a>
+                      <form th:action="@{/mc/questions/{id}/delete(id=${q.id})}" method="post">
                         <div th:replace="fragments/forms :: csrf"></div>
                         <button class="btn btn-ghost" type="submit">Eliminar</button>
                       </form>
@@ -72,5 +78,3 @@
   </div>
 </body>
 </html>
-
-

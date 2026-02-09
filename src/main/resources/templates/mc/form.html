@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head(${mode} == 'edit' ? 'Editar pregunta de seleccion unica' : 'Nueva pregunta de seleccion unica')"></head>
+<head th:replace="fragments/layout :: head(${mode} == 'edit' ? 'Editar pregunta de seleccion multiple' : 'Nueva pregunta de seleccion multiple')"></head>
 <body class="app-bg text-slate-100">
   <div class="min-h-screen">
     <header th:replace="fragments/layout :: header"></header>
@@ -9,11 +9,11 @@
       <div class="container-app">
         <div class="mb-8">
           <h1 class="section-title" th:text="${mode} == 'edit' ? 'Editar pregunta' : 'Crear pregunta'">Crear pregunta</h1>
-          <p class="section-subtitle">Escribe la pregunta, las opciones y marca la correcta.</p>
+          <p class="section-subtitle">Escribe la pregunta, las opciones y marca varias correctas.</p>
         </div>
 
         <div class="card-solid p-6">
-          <form th:action="${mode} == 'edit' ? @{/sc/questions/{id}(id=${id})} : @{/sc/questions}"
+          <form th:action="${mode} == 'edit' ? @{/mc/questions/{id}(id=${id})} : @{/mc/questions}"
                 th:object="${form}" method="post" class="space-y-2">
             <div th:replace="fragments/forms :: csrf"></div>
 
@@ -32,10 +32,10 @@
             </div>
 
             <div class="mt-4">
-              <label class="text-sm font-semibold text-slate-200">Numero de opcion correcta (1..n)</label>
+              <label class="text-sm font-semibold text-slate-200">Numeros de opciones correctas (separados por coma)</label>
               <input class="mt-2 w-full rounded-2xl border border-slate-700/60 bg-slate-900/70 p-3 text-sm text-slate-100"
-                     type="number" min="1" th:field="*{correctIndex}" placeholder="1" />
-              <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('correctIndex')}" th:errors="*{correctIndex}"></div>
+                     type="text" th:field="*{correctIndexesText}" placeholder="1, 3" />
+              <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('correctIndexesText')}" th:errors="*{correctIndexesText}"></div>
             </div>
 
             <div class="mt-4">
@@ -48,7 +48,7 @@
               <button class="btn btn-primary" type="submit" th:text="${mode} == 'edit' ? 'Guardar cambios' : 'Crear pregunta'">
                 Crear pregunta
               </button>
-              <a class="btn btn-secondary" th:href="@{/sc/questions}" href="/sc/questions">Volver al listado</a>
+              <a class="btn btn-secondary" th:href="@{/mc/questions}" href="/mc/questions">Volver al listado</a>
               <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Volver a inicio</a>
             </div>
           </form>
@@ -60,5 +60,3 @@
   </div>
 </body>
 </html>
-
-

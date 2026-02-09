@@ -1,7 +1,10 @@
 package com.app.preguntas.preguntas.sc.controller.api;
 
 import com.app.preguntas.preguntas.sc.model.SingleChoiceQuestion;
+import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionImportResult;
+import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionImportService;
 import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionService;
+import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionValidator;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +16,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/sc/questions")
 public class SingleChoiceQuestionApiController {
 
     private final SingleChoiceQuestionService service;
+    private final SingleChoiceQuestionImportService importService;
 
-    public SingleChoiceQuestionApiController(SingleChoiceQuestionService service) {
+    public SingleChoiceQuestionApiController(SingleChoiceQuestionService service,
+                                             SingleChoiceQuestionImportService importService) {
         this.service = service;
+        this.importService = importService;
     }
 
     @GetMapping
@@ -43,7 +49,7 @@ public class SingleChoiceQuestionApiController {
 
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody SingleChoiceQuestion question) {
-        String error = validate(question);
+        String error = SingleChoiceQuestionValidator.validate(question);
         if (error != null) {
             return ResponseEntity.badRequest().body(error);
         }
@@ -53,13 +59,22 @@ public class SingleChoiceQuestionApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody SingleChoiceQuestion question) {
-        String error = validate(question);
+        String error = SingleChoiceQuestionValidator.validate(question);
         if (error != null) {
             return ResponseEntity.badRequest().body(error);
         }
         Optional<SingleChoiceQuestion> updated = service.update(id, question);
         return updated.map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+        SingleChoiceQuestionImportResult result = importService.importFile(file);
+        if (!result.getErrors().isEmpty()) {
+            return ResponseEntity.badRequest().body(new UploadResponse(result));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UploadResponse(result));
     }
 
     @DeleteMapping("/{id}")
@@ -77,29 +92,27 @@ public class SingleChoiceQuestionApiController {
             .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    private String validate(SingleChoiceQuestion question) {
-        if (question.getStatement() == null || question.getStatement().trim().isEmpty()) {
-            return "La pregunta es obligatoria.";
+    private static class UploadResponse {
+        private final int total;
+        private final int created;
+        private final List<String> errors;
+
+        private UploadResponse(SingleChoiceQuestionImportResult result) {
+            this.total = result.getTotal();
+            this.created = result.getCreatedCount();
+            this.errors = result.getErrors();
         }
-        if (question.getOptions() == null || question.getOptions().size() < 2) {
-            return "Debes ingresar al menos dos opciones.";
+
+        public int getTotal() {
+            return total;
         }
-        Set<String> seen = new HashSet<>();
-        for (String option : question.getOptions()) {
-            if (option == null || option.trim().isEmpty()) {
-                return "No se permiten opciones vacias.";
-            }
-            String normalized = option.trim().toLowerCase();
-            if (!seen.add(normalized)) {
-                return "No se permiten opciones duplicadas.";
-            }
+
+        public int getCreated() {
+            return created;
         }
-        if (question.getCorrectIndex() == null) {
-            return "Debes indicar la opcion correcta.";
+
+        public List<String> getErrors() {
+            return errors;
         }
-        if (question.getCorrectIndex() < 0 || question.getCorrectIndex() >= question.getOptions().size()) {
-            return "La opcion correcta es invalida.";
-        }
-        return null;
     }
 }

@@ -23,6 +23,7 @@ public class SecurityConfig {
                     "/home",
                     "/vf/**",
                     "/sc/**",
+                    "/mc/**",
                     "/api/**",
                     "/css/**",
                     "/js/**",

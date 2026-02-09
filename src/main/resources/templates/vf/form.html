@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/layout :: head(${mode} == 'edit' ? 'Editar pregunta V/F' : 'Nueva pregunta V/F')"></head>
-<body class="bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+<body class="app-bg text-slate-100">
   <div class="min-h-screen">
     <header th:replace="fragments/layout :: header"></header>
 
@@ -17,14 +17,14 @@
                 th:object="${question}" method="post" class="space-y-2">
             <div th:replace="fragments/forms :: csrf"></div>
             <div>
-              <label class="text-sm font-semibold text-slate-700">Enunciado</label>
-              <textarea class="mt-2 w-full rounded-2xl border border-slate-200 p-3 text-sm"
+              <label class="text-sm font-semibold text-slate-200">Enunciado</label>
+              <textarea class="mt-2 w-full rounded-2xl border border-slate-700/60 bg-slate-900/70 p-3 text-sm text-slate-100"
                         th:field="*{statement}" rows="4" placeholder="Escribe la pregunta"></textarea>
-              <div class="mt-2 text-xs text-amber-700" th:if="${#fields.hasErrors('statement')}" th:errors="*{statement}"></div>
+              <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('statement')}" th:errors="*{statement}"></div>
             </div>
 
             <div class="mt-4">
-              <label class="text-sm font-semibold text-slate-700">Respuesta correcta</label>
+              <label class="text-sm font-semibold text-slate-200">Respuesta correcta</label>
               <div class="mt-2 flex flex-wrap gap-4">
                 <label class="flex items-center gap-2 text-sm">
                   <input type="radio" th:field="*{correctAnswer}" value="true" />
@@ -35,12 +35,12 @@
                   Falso
                 </label>
               </div>
-              <div class="mt-2 text-xs text-amber-700" th:if="${#fields.hasErrors('correctAnswer')}" th:errors="*{correctAnswer}"></div>
+              <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('correctAnswer')}" th:errors="*{correctAnswer}"></div>
             </div>
 
             <div class="mt-4">
-              <label class="text-sm font-semibold text-slate-700">Explicacion (opcional)</label>
-              <textarea class="mt-2 w-full rounded-2xl border border-slate-200 p-3 text-sm"
+              <label class="text-sm font-semibold text-slate-200">Explicacion (opcional)</label>
+              <textarea class="mt-2 w-full rounded-2xl border border-slate-700/60 bg-slate-900/70 p-3 text-sm text-slate-100"
                         th:field="*{explanation}" rows="3" placeholder="Contexto o explicacion"></textarea>
             </div>
 
@@ -60,3 +60,5 @@
   </div>
 </body>
 </html>
+
+

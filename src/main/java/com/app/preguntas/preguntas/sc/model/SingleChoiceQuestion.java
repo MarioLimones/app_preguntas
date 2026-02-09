@@ -1,41 +1,35 @@
 package com.app.preguntas.preguntas.sc.model;
 
+import com.app.preguntas.preguntas.common.model.BaseQuestion;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OrderColumn;
+import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class SingleChoiceQuestion {
+@Entity
+@Table(name = "sc_questions")
+public class SingleChoiceQuestion extends BaseQuestion {
 
-    private Long id;
-    private String statement;
+    @ElementCollection
+    @CollectionTable(name = "sc_question_options")
+    @OrderColumn(name = "option_index")
+    @Column(name = "option_text")
     private List<String> options = new ArrayList<>();
     private Integer correctIndex;
-    private String explanation;
 
     public SingleChoiceQuestion() {
+        super();
     }
 
     public SingleChoiceQuestion(Long id, String statement, List<String> options, Integer correctIndex, String explanation) {
-        this.id = id;
-        this.statement = statement;
+        super(id, statement, explanation);
         this.options = options != null ? new ArrayList<>(options) : new ArrayList<>();
         this.correctIndex = correctIndex;
-        this.explanation = explanation;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getStatement() {
-        return statement;
-    }
-
-    public void setStatement(String statement) {
-        this.statement = statement;
     }
 
     public List<String> getOptions() {
@@ -52,13 +46,5 @@ public class SingleChoiceQuestion {
 
     public void setCorrectIndex(Integer correctIndex) {
         this.correctIndex = correctIndex;
-    }
-
-    public String getExplanation() {
-        return explanation;
-    }
-
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
     }
 }

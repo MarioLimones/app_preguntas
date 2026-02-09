@@ -3,6 +3,8 @@ package com.app.preguntas.preguntas.sc.controller;
 import com.app.preguntas.preguntas.sc.model.SingleChoiceAnswerForm;
 import com.app.preguntas.preguntas.sc.model.SingleChoiceQuestion;
 import com.app.preguntas.preguntas.sc.model.SingleChoiceQuestionForm;
+import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionImportResult;
+import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionImportService;
 import com.app.preguntas.preguntas.sc.service.SingleChoiceQuestionService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,9 +30,12 @@ import java.util.Set;
 public class SingleChoiceQuestionController {
 
     private final SingleChoiceQuestionService service;
+    private final SingleChoiceQuestionImportService importService;
 
-    public SingleChoiceQuestionController(SingleChoiceQuestionService service) {
+    public SingleChoiceQuestionController(SingleChoiceQuestionService service,
+                                          SingleChoiceQuestionImportService importService) {
         this.service = service;
+        this.importService = importService;
     }
 
     @GetMapping
@@ -140,6 +147,25 @@ public class SingleChoiceQuestionController {
             return "redirect:/sc/questions";
         }
         redirectAttributes.addFlashAttribute("success", "Pregunta eliminada.");
+        return "redirect:/sc/questions";
+    }
+
+    @PostMapping("/upload")
+    public String upload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        SingleChoiceQuestionImportResult result = importService.importFile(file);
+        if (result.getCreatedCount() > 0) {
+            redirectAttributes.addFlashAttribute(
+                "success",
+                "Se cargaron " + result.getCreatedCount() + " de " + result.getTotal() + " preguntas."
+            );
+        }
+        if (!result.getErrors().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Algunas preguntas no pudieron cargarse.");
+            redirectAttributes.addFlashAttribute("uploadErrors", result.getErrors());
+        }
+        if (result.getCreatedCount() == 0 && result.getErrors().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "No se pudieron cargar preguntas.");
+        }
         return "redirect:/sc/questions";
     }
 

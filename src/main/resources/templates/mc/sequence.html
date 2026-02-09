@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head('Secuencia V/F')"></head>
+<head th:replace="fragments/layout :: head('Secuencia seleccion multiple')"></head>
 <body class="app-bg text-slate-100">
   <div class="min-h-screen">
     <header th:replace="fragments/layout :: header"></header>
@@ -16,7 +16,7 @@
             </p>
           </div>
           <div class="flex flex-wrap gap-2">
-            <form th:action="@{/vf/sequence/reset}" method="post">
+            <form th:action="@{/mc/sequence/reset}" method="post">
               <div th:replace="fragments/forms :: csrf"></div>
               <button class="btn btn-secondary" type="submit">Reiniciar</button>
             </form>
@@ -30,32 +30,28 @@
         </div>
 
         <div class="mt-6 card-solid p-6">
-          <form th:action="@{/vf/sequence/answer}" th:object="${answerForm}" method="post">
+          <form th:action="@{/mc/sequence/answer}" th:object="${answerForm}" method="post">
             <div th:replace="fragments/forms :: csrf"></div>
             <input type="hidden" name="questionId" th:value="${question.id}" />
-            <div class="flex flex-wrap gap-4">
-              <label class="flex items-center gap-2 text-sm">
-                <input type="radio" th:field="*{userAnswer}" value="true" />
-                Verdadero
-              </label>
-              <label class="flex items-center gap-2 text-sm">
-                <input type="radio" th:field="*{userAnswer}" value="false" />
-                Falso
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-sm" th:each="opt, idx : ${question.options}">
+                <input type="checkbox" th:field="*{selectedIndexes}" th:value="${idx.index}" />
+                <span th:text="${opt}">Opcion</span>
               </label>
             </div>
-            <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('userAnswer')}" th:errors="*{userAnswer}"></div>
+            <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('selectedIndexes')}" th:errors="*{selectedIndexes}"></div>
             <div class="mt-4 flex flex-wrap gap-2">
               <button class="btn btn-primary" type="submit">Validar</button>
-              <a class="btn btn-secondary" th:href="@{/vf/sequence/review}" href="/vf/sequence/review">Ver resumen</a>
+              <a class="btn btn-secondary" th:href="@{/mc/sequence/review}" href="/mc/sequence/review">Ver resumen</a>
             </div>
           </form>
 
           <div class="mt-4 flex flex-wrap gap-2">
-            <form th:action="@{/vf/sequence/prev}" method="post">
+            <form th:action="@{/mc/sequence/prev}" method="post">
               <div th:replace="fragments/forms :: csrf"></div>
               <button class="btn btn-ghost" type="submit" th:disabled="${!sequence.hasPrevious()}">Anterior</button>
             </form>
-            <form th:action="@{/vf/sequence/next}" method="post">
+            <form th:action="@{/mc/sequence/next}" method="post">
               <div th:replace="fragments/forms :: csrf"></div>
               <button class="btn btn-ghost" type="submit" th:disabled="${!sequence.hasNext()}">Siguiente</button>
             </form>
@@ -68,8 +64,8 @@
             </div>
           </div>
 
-          <div class="mt-4 text-xs text-slate-400" th:if="${answered != null}">
-            Ultima respuesta registrada: <strong th:text="${answered} ? 'Verdadero' : 'Falso'">Verdadero</strong>
+          <div class="mt-4 text-xs text-slate-400" th:if="${answered != null && answered != '-'}">
+            Ultima respuesta registrada: <strong th:text="${answered}">1, 2</strong>
           </div>
         </div>
       </div>
@@ -79,5 +75,3 @@
   </div>
 </body>
 </html>
-
-

@@ -1,25 +1,25 @@
 package com.app.preguntas.preguntas.sc.service;
 
 import com.app.preguntas.preguntas.sc.model.SingleChoiceQuestion;
+import com.app.preguntas.preguntas.sc.repository.SingleChoiceQuestionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class SingleChoiceQuestionService {
 
-    private final AtomicLong idSequence = new AtomicLong(0);
-    private final Map<Long, SingleChoiceQuestion> store = new ConcurrentHashMap<>();
+    private final SingleChoiceQuestionRepository repository;
+
+    public SingleChoiceQuestionService(SingleChoiceQuestionRepository repository) {
+        this.repository = repository;
+    }
 
     public List<SingleChoiceQuestion> findAll() {
-        List<SingleChoiceQuestion> items = new ArrayList<>(store.values());
+        List<SingleChoiceQuestion> items = repository.findAll();
         items.sort(Comparator.comparingLong(SingleChoiceQuestion::getId));
         return items;
     }
@@ -28,24 +28,22 @@ public class SingleChoiceQuestionService {
         if (id == null) {
             return Optional.empty();
         }
-        return Optional.ofNullable(store.get(id));
+        return repository.findById(id);
     }
 
     public SingleChoiceQuestion create(SingleChoiceQuestion input) {
-        Long id = idSequence.incrementAndGet();
         SingleChoiceQuestion created = new SingleChoiceQuestion(
-            id,
+            null,
             input.getStatement(),
             input.getOptions(),
             input.getCorrectIndex(),
             input.getExplanation()
         );
-        store.put(id, created);
-        return created;
+        return repository.save(created);
     }
 
     public Optional<SingleChoiceQuestion> update(Long id, SingleChoiceQuestion input) {
-        if (id == null || !store.containsKey(id)) {
+        if (id == null || !repository.existsById(id)) {
             return Optional.empty();
         }
         SingleChoiceQuestion updated = new SingleChoiceQuestion(
@@ -55,12 +53,15 @@ public class SingleChoiceQuestionService {
             input.getCorrectIndex(),
             input.getExplanation()
         );
-        store.put(id, updated);
-        return Optional.of(updated);
+        return Optional.of(repository.save(updated));
     }
 
     public boolean delete(Long id) {
-        return store.remove(id) != null;
+        if (id == null || !repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
     }
 
     public Optional<SingleChoiceQuestion> getRandom() {
@@ -82,15 +83,19 @@ public class SingleChoiceQuestionService {
         }
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getId().equals(currentId)) {
-                return Optional.of(items.get(Math.min(i + 1, items.size() - 1)));
+                int next = (i + 1) % items.size();
+                return Optional.of(items.get(next));
             }
         }
         return Optional.of(items.get(0));
     }
 
     public List<Long> getAllIdsSorted() {
-        List<Long> ids = new ArrayList<>(store.keySet());
-        ids.sort(Long::compareTo);
+        List<Long> ids = repository.findAll()
+            .stream()
+            .map(SingleChoiceQuestion::getId)
+            .sorted()
+            .toList();
         return ids;
     }
 }

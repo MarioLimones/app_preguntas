@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: app_preguntas_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: app_preguntas
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongo:
+    image: mongo:7.0
+    container_name: app_preguntas_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    container_name: app_preguntas_libretranslate
+    ports:
+      - "5000:5000"
+
+volumes:
+  mysql_data:
+  mongo_data:

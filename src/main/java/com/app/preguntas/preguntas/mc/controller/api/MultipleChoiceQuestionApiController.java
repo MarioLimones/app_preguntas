@@ -2,6 +2,7 @@ package com.app.preguntas.preguntas.mc.controller.api;
 
 import com.app.preguntas.preguntas.mc.model.MultipleChoiceQuestion;
 import com.app.preguntas.preguntas.mc.service.MultipleChoiceQuestionService;
+import com.app.preguntas.preguntas.mc.service.OpenTdbQuestionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
@@ -24,9 +26,12 @@ import java.util.Set;
 public class MultipleChoiceQuestionApiController {
 
     private final MultipleChoiceQuestionService service;
+    private final OpenTdbQuestionService openTdbQuestionService;
 
-    public MultipleChoiceQuestionApiController(MultipleChoiceQuestionService service) {
+    public MultipleChoiceQuestionApiController(MultipleChoiceQuestionService service,
+                                               OpenTdbQuestionService openTdbQuestionService) {
         this.service = service;
+        this.openTdbQuestionService = openTdbQuestionService;
     }
 
     @GetMapping
@@ -75,6 +80,19 @@ public class MultipleChoiceQuestionApiController {
         return service.getRandom()
             .map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<List<MultipleChoiceQuestion>> importFromOpenTdb(
+        @RequestParam(defaultValue = "5") int amount,
+        @RequestParam(required = false) Integer category,
+        @RequestParam(required = false) String difficulty
+    ) {
+        List<MultipleChoiceQuestion> imported = openTdbQuestionService.fetchMultipleChoiceQuestions(amount, category, difficulty);
+        List<MultipleChoiceQuestion> created = imported.stream()
+            .map(service::create)
+            .toList();
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     private String validate(MultipleChoiceQuestion question) {

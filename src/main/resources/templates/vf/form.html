@@ -1,64 +1,71 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="fragments/layout :: head(${mode} == 'edit' ? 'Editar pregunta V/F' : 'Nueva pregunta V/F')"></head>
-<body class="app-bg text-slate-100">
-  <div class="min-h-screen">
-    <header th:replace="fragments/layout :: header"></header>
 
-    <main class="section">
-      <div class="container-app">
-        <div class="mb-8">
-          <h1 class="section-title" th:text="${mode} == 'edit' ? 'Editar pregunta' : 'Crear pregunta'">Crear pregunta</h1>
-          <p class="section-subtitle">Define el enunciado y la respuesta correcta.</p>
+<body class="bg-sky-50">
+  <header th:replace="fragments/layout :: header"></header>
+
+  <main class="container mx-auto p-6 max-w-3xl">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-800" th:text="${mode} == 'edit' ? 'Editar pregunta' : 'Crear pregunta'">
+        Crear pregunta
+      </h1>
+      <p class="text-gray-600 mt-1">Define el enunciado y la respuesta correcta.</p>
+    </div>
+
+    <div class="bg-blue-100 rounded-lg shadow-sm p-6 border border-blue-200">
+      <form th:action="${mode} == 'edit' ? @{/vf/questions/{id}(id=${question.id})} : @{/vf/questions}"
+        th:object="${question}" method="post" class="space-y-4">
+        <div th:replace="fragments/forms :: csrf"></div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Enunciado</label>
+          <textarea
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            th:field="*{statement}" rows="4" placeholder="Escribe la pregunta"></textarea>
+          <div class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('statement')}" th:errors="*{statement}">
+          </div>
         </div>
 
-        <div class="card-solid p-6">
-          <form th:action="${mode} == 'edit' ? @{/vf/questions/{id}(id=${question.id})} : @{/vf/questions}"
-                th:object="${question}" method="post" class="space-y-2">
-            <div th:replace="fragments/forms :: csrf"></div>
-            <div>
-              <label class="text-sm font-semibold text-slate-200">Enunciado</label>
-              <textarea class="mt-2 w-full rounded-2xl border border-slate-700/60 bg-slate-900/70 p-3 text-sm text-slate-100"
-                        th:field="*{statement}" rows="4" placeholder="Escribe la pregunta"></textarea>
-              <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('statement')}" th:errors="*{statement}"></div>
-            </div>
-
-            <div class="mt-4">
-              <label class="text-sm font-semibold text-slate-200">Respuesta correcta</label>
-              <div class="mt-2 flex flex-wrap gap-4">
-                <label class="flex items-center gap-2 text-sm">
-                  <input type="radio" th:field="*{correctAnswer}" value="true" />
-                  Verdadero
-                </label>
-                <label class="flex items-center gap-2 text-sm">
-                  <input type="radio" th:field="*{correctAnswer}" value="false" />
-                  Falso
-                </label>
-              </div>
-              <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('correctAnswer')}" th:errors="*{correctAnswer}"></div>
-            </div>
-
-            <div class="mt-4">
-              <label class="text-sm font-semibold text-slate-200">Explicacion (opcional)</label>
-              <textarea class="mt-2 w-full rounded-2xl border border-slate-700/60 bg-slate-900/70 p-3 text-sm text-slate-100"
-                        th:field="*{explanation}" rows="3" placeholder="Contexto o explicacion"></textarea>
-            </div>
-
-            <div class="mt-6 flex flex-wrap gap-3">
-              <button class="btn btn-primary" type="submit" th:text="${mode} == 'edit' ? 'Guardar cambios' : 'Crear pregunta'">
-                Crear pregunta
-              </button>
-              <a class="btn btn-secondary" th:href="@{/vf/questions}" href="/vf/questions">Volver al listado</a>
-              <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Volver a inicio</a>
-            </div>
-          </form>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Respuesta correcta</label>
+          <div class="flex gap-4">
+            <label class="flex items-center gap-2">
+              <input class="w-4 h-4" type="radio" th:field="*{correctAnswer}" value="true" />
+              <span class="text-sm text-gray-700">Verdadero</span>
+            </label>
+            <label class="flex items-center gap-2">
+              <input class="w-4 h-4" type="radio" th:field="*{correctAnswer}" value="false" />
+              <span class="text-sm text-gray-700">Falso</span>
+            </label>
+          </div>
+          <div class="mt-1 text-sm text-red-600" th:if="${#fields.hasErrors('correctAnswer')}"
+            th:errors="*{correctAnswer}"></div>
         </div>
-      </div>
-    </main>
 
-    <footer th:replace="fragments/layout :: footer"></footer>
-  </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Explicación (opcional)</label>
+          <textarea
+            class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            th:field="*{explanation}" rows="3" placeholder="Contexto o explicación"></textarea>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" type="submit"
+            th:text="${mode} == 'edit' ? 'Guardar cambios' : 'Crear pregunta'">
+            Crear pregunta
+          </button>
+          <a class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400" th:href="@{/vf/questions}"
+            href="/vf/questions">
+            Cancelar
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer th:replace="fragments/layout :: footer"></footer>
 </body>
+
 </html>
-
-

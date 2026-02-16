@@ -66,24 +66,26 @@ public class SingleChoiceQuestionService {
 
     public Optional<SingleChoiceQuestion> getRandom() {
         List<SingleChoiceQuestion> items = findAll();
-        if (items.isEmpty()) {
+        int size = items.size();
+        if (size == 0) {
             return Optional.empty();
         }
-        int index = ThreadLocalRandom.current().nextInt(items.size());
+        int index = ThreadLocalRandom.current().nextInt(size);
         return Optional.of(items.get(index));
     }
 
     public Optional<SingleChoiceQuestion> getNext(Long currentId) {
         List<SingleChoiceQuestion> items = findAll();
-        if (items.isEmpty()) {
+        int size = items.size();
+        if (size == 0) {
             return Optional.empty();
         }
         if (currentId == null) {
             return Optional.of(items.get(0));
         }
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (items.get(i).getId().equals(currentId)) {
-                int next = (i + 1) % items.size();
+                int next = (i + 1) % size;
                 return Optional.of(items.get(next));
             }
         }

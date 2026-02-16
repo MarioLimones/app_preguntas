@@ -14,31 +14,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**")
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/",
-                    "/home",
-                    "/vf/**",
-                    "/sc/**",
-                    "/mc/**",
-                    "/api/**",
-                    "/css/**",
-                    "/js/**",
-                    "/img/**",
-                    "/images/**",
-                    "/assets/**",
-                    "/fonts/**",
-                    "/webjars/**",
-                    "/favicon.ico"
-                ).permitAll()
-                .anyRequest()
-                .authenticated()
-            )
-            .formLogin(Customizer.withDefaults())
-            .logout(Customizer.withDefaults());
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll())
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }

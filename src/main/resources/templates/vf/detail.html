@@ -1,79 +1,59 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head('Detalle de pregunta V/F')"></head>
-<body class="app-bg text-slate-100">
-  <div class="min-h-screen">
-    <header th:replace="fragments/layout :: header"></header>
 
-    <main class="section">
-      <div class="container-app">
-        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 class="section-title">Detalle de la pregunta</h1>
-            <p class="section-subtitle">Revisa, responde o edita el contenido.</p>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <a class="btn btn-secondary" th:href="@{/vf/questions}" href="/vf/questions">Volver al listado</a>
-            <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Inicio</a>
-          </div>
-        </div>
+<head th:replace="fragments/layout :: head('Detalle pregunta V/F')"></head>
 
-        <div class="card p-6">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Pregunta #<span th:text="${question.id}">1</span></p>
-          <h2 class="mt-3 text-lg font-semibold text-slate-100" th:text="${question.statement}">Enunciado</h2>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="chip" th:classappend="${question.correctAnswer} ? ' bg-emerald-500/10 text-emerald-200' : ' bg-amber-500/10 text-amber-200'">
-              Correcta: <strong th:text="${question.correctAnswer} ? 'Verdadero' : 'Falso'">Verdadero</strong>
-            </span>
-            <span class="chip" th:if="${question.explanation != null and !#strings.isEmpty(question.explanation)}">
-              <span th:text="${question.explanation}">Explicacion</span>
-            </span>
-          </div>
-        </div>
+<body class="bg-sky-50">
+  <header th:replace="fragments/layout :: header"></header>
 
-        <div class="mt-6 card-solid p-6">
-          <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Responder</h3>
-          <form class="mt-4" th:action="@{/vf/questions/{id}/answer(id=${question.id})}" th:object="${answerForm}" method="post">
-            <div th:replace="fragments/forms :: csrf"></div>
-            <div class="flex flex-wrap gap-4">
-              <label class="flex items-center gap-2 text-sm">
-                <input type="radio" th:field="*{userAnswer}" value="true" />
-                Verdadero
-              </label>
-              <label class="flex items-center gap-2 text-sm">
-                <input type="radio" th:field="*{userAnswer}" value="false" />
-                Falso
-              </label>
-            </div>
-            <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('userAnswer')}" th:errors="*{userAnswer}"></div>
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button class="btn btn-primary" type="submit">Validar respuesta</button>
-              <a class="btn btn-secondary" th:href="@{/vf/questions/{id}/edit(id=${question.id})}" href="#">Editar</a>
-            </div>
-          </form>
+  <main class="container mx-auto p-6 max-w-3xl">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Detalle de la pregunta</h1>
+      <p class="text-gray-600 mt-1">Información completa de la pregunta</p>
+    </div>
 
-          <div class="mt-4" th:if="${result != null}">
-            <div class="rounded-2xl border px-4 py-3 text-sm"
-                 th:classappend="${result} ? ' border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : ' border-amber-400/30 bg-amber-500/10 text-amber-200'">
-              <span th:text="${result} ? 'Correcto' : 'Incorrecto'">Correcto</span>
-              <span class="ml-2" th:text="'Tu respuesta: ' + (${answerValue} ? 'Verdadero' : 'Falso')">Tu respuesta</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-6 flex flex-wrap gap-2">
-          <form th:action="@{/vf/questions/{id}/delete(id=${question.id})}" method="post">
-            <div th:replace="fragments/forms :: csrf"></div>
-            <button class="btn btn-ghost" type="submit">Eliminar pregunta</button>
-          </form>
-          <a class="btn btn-secondary" th:href="@{/vf/play/random}" href="/vf/play/random">Responder otra</a>
-        </div>
+    <div class="bg-blue-100 rounded-lg shadow-sm p-6 space-y-4 border border-blue-200">
+      <div>
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">ID</h3>
+        <p class="text-gray-800" th:text="${question.id}">1</p>
       </div>
-    </main>
 
-    <footer th:replace="fragments/layout :: footer"></footer>
-  </div>
+      <div>
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Enunciado</h3>
+        <p class="text-gray-800" th:text="${question.statement}">Texto de la pregunta</p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Respuesta correcta</h3>
+        <span th:if="${question.correctAnswer}"
+          class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+          Verdadero
+        </span>
+        <span th:unless="${question.correctAnswer}"
+          class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
+          Falso
+        </span>
+      </div>
+
+      <div th:if="${question.explanation}">
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Explicación</h3>
+        <p class="text-gray-600" th:text="${question.explanation}">Explicación de la respuesta</p>
+      </div>
+
+      <div class="flex gap-3 pt-4 border-t">
+        <a th:href="@{/vf/questions/{id}/edit(id=${question.id})}" href="#"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Editar
+        </a>
+        <a th:href="@{/vf/questions}" href="/vf/questions"
+          class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">
+          Volver al listado
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer th:replace="fragments/layout :: footer"></footer>
 </body>
+
 </html>
-
-

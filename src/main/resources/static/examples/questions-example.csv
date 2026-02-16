@@ -1,0 +1,8 @@
+tipo,enunciado,datos,respuesta,explicacion
+VF,La Tierra es plana,false,,La Tierra es un geoide aproximadamente esférica
+VF,Java es un lenguaje de programación,true,,Java es un lenguaje orientado a objetos
+VF,El agua hierve a 50 grados Celsius,false,,El agua hierve a 100 grados Celsius a nivel del mar
+SC,¿Cuál es la capital de España?,Madrid;Barcelona;Sevilla;Valencia,0,Madrid es la capital de España desde 1561
+SC,¿Qué lenguaje se usa para desarrollo web frontend?,Python;JavaScript;C++;Ruby,1,JavaScript es el lenguaje estándar para desarrollo web frontend
+MC,¿Cuáles son lenguajes de programación?,Java;Python;HTML;CSS;JavaScript,0;1;4,HTML y CSS son lenguajes de marcado y estilos
+MC,¿Cuáles son colores primarios?,Rojo;Verde;Azul;Amarillo;Naranja,0;2;3,Los colores primarios son rojo azul y amarillo

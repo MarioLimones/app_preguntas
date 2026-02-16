@@ -1,79 +1,193 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="fragments/layout :: head('Secuencia seleccion unica')"></head>
-<body class="app-bg text-slate-100">
-  <div class="min-h-screen">
-    <header th:replace="fragments/layout :: header"></header>
 
-    <main class="section">
-      <div class="container-app">
-        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 class="section-title">Secuencia de preguntas</h1>
-            <p class="section-subtitle">
-              Progreso: <span th:text="${sequence.currentIndex + 1}">1</span> / <span th:text="${sequence.total}">1</span>
-              | Respondidas: <span th:text="${sequence.answeredCount}">0</span>
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased font-sans">
+  <div class="relative min-h-screen overflow-hidden bg-sky-50">
+
+
+    <div class="relative z-10 flex min-h-screen flex-col">
+      <header th:replace="fragments/layout :: header"></header>
+
+      <main class="flex-1 py-12 md:py-16">
+        <div class="mx-auto w-full max-w-6xl px-5 sm:px-6 lg:px-10">
+          <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">Secuencia de preguntas</h1>
+              <p class="mt-3 text-sm text-slate-700 md:text-base">
+                Pregunta <span th:text="${sequence.currentIndex + 1}">1</span> de <span
+                  th:text="${sequence.questionIds.size()}">1</span>
+              </p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <form th:action="@{/sc/sequence/reset}" method="post">
+                <div th:replace="fragments/forms :: csrf"></div>
+                <button class="
+                    inline-flex items-center justify-center gap-2
+                    rounded-full border border-sky-400/40
+                    bg-white/80 px-5 py-2.5
+                    text-sm font-semibold text-slate-900
+                    shadow-lg shadow-sky-500/10
+                    transition
+                    hover:border-sky-300/70 hover:bg-white/90 hover:text-slate-900
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/70
+                    focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
+                  " type="submit">
+                  Reiniciar
+                </button>
+              </form>
+              <a class="
+                  inline-flex items-center justify-center gap-2
+                  rounded-full px-4 py-2
+                  text-sm font-semibold text-slate-700
+                  transition
+                  hover:bg-sky-50 hover:text-slate-900
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/50
+                  focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950
+                " th:href="@{/#inicio}" href="/#inicio">
+                Inicio
+              </a>
+            </div>
+          </div>
+
+          <!-- Barra de progreso -->
+          <div class="mb-8 bg-slate-200 rounded-full h-2.5 overflow-hidden">
+            <div class="bg-sky-400 h-full transition-all duration-500"
+              th:style="'width: ' + ${(sequence.currentIndex + 1) * 100 / sequence.questionIds.size()} + '%'"></div>
+          </div>
+
+          <div class="rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-slate-200/80">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+              Pregunta #<span th:text="${question.id}">1</span>
             </p>
+            <h2 class="mt-3 text-lg font-semibold text-slate-900" th:text="${question.statement}">Enunciado</h2>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <form th:action="@{/sc/sequence/reset}" method="post">
+
+          <div class="mt-6 rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-slate-200/80">
+            <!-- Feedback y Navegación -->
+            <div class="mt-8 space-y-6" th:if="${result != null}">
+              <div class="rounded-3xl border-2 p-6 transition-all duration-300"
+                th:classappend="${result} ? 'border-sky-400/30 bg-sky-500/10 text-sky-900' : 'border-yellow-400/30 bg-yellow-50 text-yellow-900'">
+
+                <div class="flex items-center gap-4 mb-4">
+                  <div class="flex h-12 w-12 items-center justify-center rounded-full text-2xl shadow-inner"
+                    th:classappend="${result} ? 'bg-sky-400 text-sky-950' : 'bg-yellow-400 text-yellow-950'"
+                    th:text="${result} ? '✅' : '❌'">
+                    ✅
+                  </div>
+                  <div>
+                    <h3 class="text-xl font-bold" th:text="${result} ? '¡Respuesta correcta!' : 'Respuesta incorrecta'">
+                      Resultado
+                    </h3>
+                    <p class="text-sm opacity-80" th:if="${!result}">
+                      La opción correcta era la número
+                      <strong th:text="${question.correctIndex != null ? (question.correctIndex + 1) : '-'}">1</strong>.
+                    </p>
+                  </div>
+                </div>
+
+                <div th:if="${question.explanation != null and !#strings.isEmpty(question.explanation)}"
+                  class="mt-4 p-4 rounded-2xl bg-white/50 border border-current/10">
+                  <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-1">Explicación</h4>
+                  <p class="text-sm italic" th:text="${question.explanation}">Aquí va la explicación.</p>
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-4">
+                <form th:if="${sequence.hasNext()}" th:action="@{/sc/sequence/next}" method="post" class="flex-1">
+                  <div th:replace="fragments/forms :: csrf"></div>
+                  <button type="submit" class="
+                      w-full inline-flex items-center justify-center gap-2
+                      rounded-full bg-sky-400 px-8 py-4
+                      text-lg font-bold text-sky-950
+                      shadow-xl shadow-sky-500/30
+                      transition hover:-translate-y-1 hover:bg-sky-300
+                    ">
+                    ➡️ Siguiente Pregunta
+                  </button>
+                </form>
+                <a th:unless="${sequence.hasNext()}" th:href="@{/sc/sequence/review}" class="
+                    flex-1 inline-flex items-center justify-center gap-2
+                    rounded-full bg-green-500 px-8 py-4
+                    text-lg font-bold text-white
+                    shadow-xl shadow-green-500/30
+                    transition hover:-translate-y-1 hover:bg-green-400
+                  ">
+                  🏁 Ver Resultados Finales
+                </a>
+              </div>
+            </div>
+
+            <!-- Formulario para responder (solo si no se ha respondido) -->
+            <form th:if="${result == null}" th:action="@{/sc/sequence/answer}" th:object="${answerForm}" method="post">
               <div th:replace="fragments/forms :: csrf"></div>
-              <button class="btn btn-secondary" type="submit">Reiniciar</button>
+              <input type="hidden" name="questionId" th:value="${question.id}" />
+              <div class="space-y-3">
+                <label
+                  class="group flex items-center gap-4 cursor-pointer rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-4 text-slate-800 transition-all hover:border-sky-400/40 hover:bg-sky-50"
+                  th:each="opt, idx : ${question.options}">
+                  <input class="h-5 w-5 rounded-full border-slate-300 bg-white text-sky-400 focus:ring-sky-400/50"
+                    type="radio" th:field="*{selectedIndex}" th:value="${idx.index}" required />
+                  <div class="flex-1">
+                    <span class="text-base font-medium group-hover:text-sky-900" th:text="${opt}">Opcion</span>
+                  </div>
+                </label>
+              </div>
+              <div class="mt-2 text-sm text-red-500 font-medium" th:if="${#fields.hasErrors('selectedIndex')}"
+                th:errors="*{selectedIndex}"></div>
+
+              <div class="mt-8 flex gap-4">
+                <button class="
+                    flex-1 inline-flex items-center justify-center
+                    rounded-full bg-sky-400 px-8 py-4
+                    text-lg font-bold text-sky-950
+                    shadow-xl shadow-sky-500/30
+                    transition hover:-translate-y-1 hover:bg-sky-300
+                  " type="submit">
+                  Confirmar Respuesta
+                </button>
+              </div>
             </form>
-            <a class="btn btn-ghost" th:href="@{/#inicio}" href="/#inicio">Inicio</a>
+
+            <div class="mt-12 flex items-center justify-between gap-4 border-t border-slate-100 pt-6">
+              <div class="flex gap-2">
+                <form th:action="@{/sc/sequence/prev}" method="post">
+                  <div th:replace="fragments/forms :: csrf"></div>
+                  <button class="
+                      inline-flex items-center justify-center gap-2
+                      rounded-full px-5 py-2.5
+                      text-sm font-semibold text-slate-600
+                      transition hover:bg-slate-100 hover:text-slate-900
+                      disabled:opacity-30 disabled:cursor-not-allowed
+                    " type="submit" th:disabled="${!sequence.hasPrevious()}">
+                    ⇠ Anterior
+                  </button>
+                </form>
+                <form th:action="@{/sc/sequence/next}" method="post">
+                  <div th:replace="fragments/forms :: csrf"></div>
+                  <button class="
+                      inline-flex items-center justify-center gap-2
+                      rounded-full px-5 py-2.5
+                      text-sm font-semibold text-slate-600
+                      transition hover:bg-slate-100 hover:text-slate-900
+                      disabled:opacity-30 disabled:cursor-not-allowed
+                    " type="submit" th:disabled="${!sequence.hasNext()}">
+                    Siguiente ⇢
+                  </button>
+                </form>
+              </div>
+              <a class="text-sm font-semibold text-sky-600 hover:text-sky-700" th:href="@{/sc/sequence/review}">
+                Resumen de respuestas
+              </a>
+            </div>
           </div>
         </div>
+      </main>
 
-        <div class="card p-6">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Pregunta #<span th:text="${question.id}">1</span></p>
-          <h2 class="mt-3 text-lg font-semibold text-slate-100" th:text="${question.statement}">Enunciado</h2>
-        </div>
-
-        <div class="mt-6 card-solid p-6">
-          <form th:action="@{/sc/sequence/answer}" th:object="${answerForm}" method="post">
-            <div th:replace="fragments/forms :: csrf"></div>
-            <input type="hidden" name="questionId" th:value="${question.id}" />
-            <div class="space-y-2">
-              <label class="flex items-center gap-2 text-sm" th:each="opt, idx : ${question.options}">
-                <input type="radio" th:field="*{selectedIndex}" th:value="${idx.index}" />
-                <span th:text="${opt}">Opcion</span>
-              </label>
-            </div>
-            <div class="mt-2 text-xs text-amber-200" th:if="${#fields.hasErrors('selectedIndex')}" th:errors="*{selectedIndex}"></div>
-            <div class="mt-4 flex flex-wrap gap-2">
-              <button class="btn btn-primary" type="submit">Validar</button>
-              <a class="btn btn-secondary" th:href="@{/sc/sequence/review}" href="/sc/sequence/review">Ver resumen</a>
-            </div>
-          </form>
-
-          <div class="mt-4 flex flex-wrap gap-2">
-            <form th:action="@{/sc/sequence/prev}" method="post">
-              <div th:replace="fragments/forms :: csrf"></div>
-              <button class="btn btn-ghost" type="submit" th:disabled="${!sequence.hasPrevious()}">Anterior</button>
-            </form>
-            <form th:action="@{/sc/sequence/next}" method="post">
-              <div th:replace="fragments/forms :: csrf"></div>
-              <button class="btn btn-ghost" type="submit" th:disabled="${!sequence.hasNext()}">Siguiente</button>
-            </form>
-          </div>
-
-          <div class="mt-4" th:if="${result != null}">
-            <div class="rounded-2xl border px-4 py-3 text-sm"
-                 th:classappend="${result} ? ' border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : ' border-amber-400/30 bg-amber-500/10 text-amber-200'">
-              <span th:text="${result} ? 'Correcto' : 'Incorrecto'">Correcto</span>
-            </div>
-          </div>
-
-          <div class="mt-4 text-xs text-slate-400" th:if="${answered != null}">
-            Ultima respuesta registrada: <strong th:text="${answered + 1}">1</strong>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <footer th:replace="fragments/layout :: footer"></footer>
+      <footer th:replace="fragments/layout :: footer"></footer>
+    </div>
   </div>
 </body>
+
 </html>
-
-

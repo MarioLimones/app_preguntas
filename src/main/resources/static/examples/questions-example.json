@@ -1,0 +1,77 @@
+{
+    "trueFalse": [
+        {
+            "statement": "La Tierra es plana",
+            "correctAnswer": false,
+            "explanation": "La Tierra es un geoide, aproximadamente esférica"
+        },
+        {
+            "statement": "Java es un lenguaje de programación",
+            "correctAnswer": true,
+            "explanation": "Java es un lenguaje de programación orientado a objetos"
+        },
+        {
+            "statement": "El agua hierve a 50 grados Celsius",
+            "correctAnswer": false,
+            "explanation": "El agua hierve a 100 grados Celsius a nivel del mar"
+        }
+    ],
+    "singleChoice": [
+        {
+            "statement": "¿Cuál es la capital de España?",
+            "options": [
+                "Madrid",
+                "Barcelona",
+                "Sevilla",
+                "Valencia"
+            ],
+            "correctIndex": 0,
+            "explanation": "Madrid es la capital de España desde 1561"
+        },
+        {
+            "statement": "¿Qué lenguaje se usa principalmente para desarrollo web frontend?",
+            "options": [
+                "Python",
+                "JavaScript",
+                "C++",
+                "Ruby"
+            ],
+            "correctIndex": 1,
+            "explanation": "JavaScript es el lenguaje estándar para desarrollo web frontend"
+        }
+    ],
+    "multipleChoice": [
+        {
+            "statement": "¿Cuáles de los siguientes son lenguajes de programación?",
+            "options": [
+                "Java",
+                "Python",
+                "HTML",
+                "CSS",
+                "JavaScript"
+            ],
+            "correctIndexes": [
+                0,
+                1,
+                4
+            ],
+            "explanation": "HTML y CSS son lenguajes de marcado y estilos, no de programación"
+        },
+        {
+            "statement": "¿Cuáles son colores primarios?",
+            "options": [
+                "Rojo",
+                "Verde",
+                "Azul",
+                "Amarillo",
+                "Naranja"
+            ],
+            "correctIndexes": [
+                0,
+                2,
+                3
+            ],
+            "explanation": "Los colores primarios son rojo, azul y amarillo"
+        }
+    ]
+}

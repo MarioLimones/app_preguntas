@@ -56,6 +56,10 @@ public class MultipleChoiceSequenceSession implements Serializable {
         return questionIds.size();
     }
 
+    public int getTotalQuestions() {
+        return questionIds.size();
+    }
+
     public int getAnsweredCount() {
         return answers.size();
     }

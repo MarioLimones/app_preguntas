@@ -67,11 +67,10 @@ public class TrueFalseSequenceController {
 
     @PostMapping("/answer")
     public String answer(@RequestParam Long questionId,
-                         @Valid @ModelAttribute("answerForm") AnswerForm answerForm,
-                         BindingResult bindingResult,
-                         HttpSession session,
-                         Model model,
-                         RedirectAttributes redirectAttributes) {
+            @RequestParam Boolean userAnswer,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         SequenceSession sequence = getSequence(session);
         if (sequence == null) {
             redirectAttributes.addFlashAttribute("error", "Inicia una secuencia para continuar.");
@@ -82,17 +81,19 @@ public class TrueFalseSequenceController {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
             return "redirect:/vf/sequence";
         }
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("question", question.get());
-            model.addAttribute("sequence", sequence);
-            return "vf/sequence";
-        }
-        sequence.getAnswers().put(questionId, answerForm.getUserAnswer());
-        boolean correct = answerForm.getUserAnswer().equals(question.get().getCorrectAnswer());
+
+        // Guardar la respuesta del usuario
+        sequence.getAnswers().put(questionId, userAnswer);
+
+        // Calcular si es correcta
+        boolean correct = userAnswer.equals(question.get().getCorrectAnswer());
+
+        // Preparar el modelo para mostrar el resultado
         model.addAttribute("question", question.get());
         model.addAttribute("sequence", sequence);
         model.addAttribute("result", correct);
-        model.addAttribute("answered", answerForm.getUserAnswer());
+        model.addAttribute("answered", userAnswer);
+
         return "vf/sequence";
     }
 

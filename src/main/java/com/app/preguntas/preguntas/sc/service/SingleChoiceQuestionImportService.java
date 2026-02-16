@@ -124,9 +124,11 @@ public class SingleChoiceQuestionImportService {
         normalized.setStatement(trimToNull(question.getStatement()));
         normalized.setExplanation(trimToNull(question.getExplanation()));
         normalized.setCorrectIndex(question.getCorrectIndex());
-        List<String> options = new ArrayList<>();
-        if (question.getOptions() != null) {
-            for (String option : question.getOptions()) {
+        List<String> sourceOptions = question.getOptions();
+        int optionCount = sourceOptions != null ? sourceOptions.size() : 0;
+        List<String> options = new ArrayList<>(optionCount);
+        if (sourceOptions != null) {
+            for (String option : sourceOptions) {
                 options.add(trimToNull(option));
             }
         }
@@ -257,23 +259,22 @@ public class SingleChoiceQuestionImportService {
     }
 
     private char detectDelimiter(String line) {
-        int commas = countDelimiter(line, ',');
-        int semicolons = countDelimiter(line, ';');
-        return semicolons > commas ? ';' : ',';
-    }
-
-    private int countDelimiter(String line, char delimiter) {
-        int count = 0;
+        int commas = 0;
+        int semicolons = 0;
         boolean inQuotes = false;
         for (int i = 0; i < line.length(); i++) {
             char ch = line.charAt(i);
             if (ch == '"') {
                 inQuotes = !inQuotes;
-            } else if (ch == delimiter && !inQuotes) {
-                count++;
+            } else if (!inQuotes) {
+                if (ch == ',') {
+                    commas++;
+                } else if (ch == ';') {
+                    semicolons++;
+                }
             }
         }
-        return count;
+        return semicolons > commas ? ';' : ',';
     }
 
     private String getExtension(String filename) {

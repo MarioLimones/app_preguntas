@@ -63,24 +63,26 @@ public class TrueFalseQuestionService {
 
     public Optional<TrueFalseQuestion> getRandom() {
         List<TrueFalseQuestion> items = findAll();
-        if (items.isEmpty()) {
+        int size = items.size();
+        if (size == 0) {
             return Optional.empty();
         }
-        int index = ThreadLocalRandom.current().nextInt(items.size());
+        int index = ThreadLocalRandom.current().nextInt(size);
         return Optional.of(items.get(index));
     }
 
     public Optional<TrueFalseQuestion> getNext(Long currentId) {
         List<TrueFalseQuestion> items = findAll();
-        if (items.isEmpty()) {
+        int size = items.size();
+        if (size == 0) {
             return Optional.empty();
         }
         if (currentId == null) {
             return Optional.of(items.get(0));
         }
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (items.get(i).getId().equals(currentId)) {
-                return Optional.of(items.get(Math.min(i + 1, items.size() - 1)));
+                return Optional.of(items.get(Math.min(i + 1, size - 1)));
             }
         }
         return Optional.of(items.get(0));

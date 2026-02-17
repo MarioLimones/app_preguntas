@@ -3,12 +3,12 @@ services:
     image: mysql:8.4
     container_name: app_preguntas_mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
-      MYSQL_DATABASE: app_preguntas
-      MYSQL_USER: app_user
-      MYSQL_PASSWORD: app_pass
-      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: quizapp
+      MYSQL_USER: quizapp_user
+      MYSQL_PASSWORD: quizapp_password
+      MYSQL_ROOT_PASSWORD: "1234"
     volumes:
       - mysql_data:/var/lib/mysql
 
@@ -25,6 +25,7 @@ services:
     container_name: app_preguntas_libretranslate
     ports:
       - "5000:5000"
+    command: [ "--load-only", "en,es" ]
 
 volumes:
   mysql_data:

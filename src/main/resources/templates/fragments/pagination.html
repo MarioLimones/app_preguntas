@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <!--
+    Pagination fragment. Usage:
+      th:replace="fragments/pagination :: controls(pageResult=${pageResult}, baseUrl='/vf/questions')"
+    Requires model attributes:
+      - pageResult : PageResult<T> object
+      - baseUrl    : string with the base URL for the listing
+  -->
+    <nav th:fragment="controls(pageResult, baseUrl)" th:if="${pageResult.totalPages > 1}"
+        class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+        <div class="text-sm text-gray-600">
+            Mostrando página
+            <span class="font-semibold" th:text="${pageResult.displayPage}">1</span>
+            de
+            <span class="font-semibold" th:text="${pageResult.totalPages}">1</span>
+            (<span th:text="${pageResult.totalElements}">0</span> resultados)
+        </div>
+
+        <div class="flex items-center gap-1">
+            <!-- Previous -->
+            <a th:if="${pageResult.hasPrevious}"
+                th:href="@{${baseUrl}(page=${pageResult.page - 1}, size=${pageResult.size})}"
+                class="px-3 py-1.5 text-sm rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition">
+                ← Anterior
+            </a>
+            <span th:unless="${pageResult.hasPrevious}"
+                class="px-3 py-1.5 text-sm rounded border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed">
+                ← Anterior
+            </span>
+
+            <!-- Page numbers (show up to 7 pages around current) -->
+            <th:block th:each="i : ${#numbers.sequence(0, pageResult.totalPages - 1)}">
+                <th:block th:if="${i == pageResult.page}">
+                    <span
+                        class="px-3 py-1.5 text-sm rounded border border-blue-500 bg-blue-600 text-white font-semibold"
+                        th:text="${i + 1}">1</span>
+                </th:block>
+                <th:block th:if="${i != pageResult.page
+          and (i == 0 or i == pageResult.totalPages - 1
+          or (i >= pageResult.page - 2 and i <= pageResult.page + 2))}">
+                    <a th:href="@{${baseUrl}(page=${i}, size=${pageResult.size})}"
+                        class="px-3 py-1.5 text-sm rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition"
+                        th:text="${i + 1}">1</a>
+                </th:block>
+                <th:block th:if="${i != pageResult.page
+          and (i == pageResult.page - 3 or i == pageResult.page + 3)
+          and i != 0 and i != pageResult.totalPages - 1}">
+                    <span class="px-1 text-gray-400">…</span>
+                </th:block>
+            </th:block>
+
+            <!-- Next -->
+            <a th:if="${pageResult.hasNext}"
+                th:href="@{${baseUrl}(page=${pageResult.page + 1}, size=${pageResult.size})}"
+                class="px-3 py-1.5 text-sm rounded border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 transition">
+                Siguiente →
+            </a>
+            <span th:unless="${pageResult.hasNext}"
+                class="px-3 py-1.5 text-sm rounded border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed">
+                Siguiente →
+            </span>
+        </div>
+    </nav>
+</body>
+
+</html>

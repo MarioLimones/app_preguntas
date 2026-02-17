@@ -33,14 +33,16 @@ public class SingleChoiceQuestionController {
     private final SingleChoiceQuestionImportService importService;
 
     public SingleChoiceQuestionController(SingleChoiceQuestionService service,
-                                          SingleChoiceQuestionImportService importService) {
+            SingleChoiceQuestionImportService importService) {
         this.service = service;
         this.importService = importService;
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("questions", service.findAll());
+    public String list(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Integer size,
+            Model model) {
+        model.addAttribute("pageResult", service.findPage(page, size));
         return "sc/list";
     }
 
@@ -53,9 +55,9 @@ public class SingleChoiceQuestionController {
 
     @PostMapping
     public String create(@Valid @ModelAttribute("form") SingleChoiceQuestionForm form,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         List<String> options = validateAndParseOptions(form, bindingResult);
         Integer correctIndex = validateCorrectIndex(form.getCorrectIndex(), options, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -81,10 +83,10 @@ public class SingleChoiceQuestionController {
 
     @PostMapping("/{id}/answer")
     public String answer(@PathVariable Long id,
-                         @Valid @ModelAttribute("answerForm") SingleChoiceAnswerForm answerForm,
-                         BindingResult bindingResult,
-                         Model model,
-                         RedirectAttributes redirectAttributes) {
+            @Valid @ModelAttribute("answerForm") SingleChoiceAnswerForm answerForm,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         Optional<SingleChoiceQuestion> question = service.findById(id);
         if (question.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
@@ -120,10 +122,10 @@ public class SingleChoiceQuestionController {
 
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute("form") SingleChoiceQuestionForm form,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            @Valid @ModelAttribute("form") SingleChoiceQuestionForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         List<String> options = validateAndParseOptions(form, bindingResult);
         Integer correctIndex = validateCorrectIndex(form.getCorrectIndex(), options, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -155,9 +157,8 @@ public class SingleChoiceQuestionController {
         SingleChoiceQuestionImportResult result = importService.importFile(file);
         if (result.getCreatedCount() > 0) {
             redirectAttributes.addFlashAttribute(
-                "success",
-                "Se cargaron " + result.getCreatedCount() + " de " + result.getTotal() + " preguntas."
-            );
+                    "success",
+                    "Se cargaron " + result.getCreatedCount() + " de " + result.getTotal() + " preguntas.");
         }
         if (!result.getErrors().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Algunas preguntas no pudieron cargarse.");
@@ -192,7 +193,8 @@ public class SingleChoiceQuestionController {
             return null;
         }
         if (correctIndex < 1 || correctIndex > options.size()) {
-            bindingResult.rejectValue("correctIndex", "range", "La opcion correcta debe estar entre 1 y " + options.size() + ".");
+            bindingResult.rejectValue("correctIndex", "range",
+                    "La opcion correcta debe estar entre 1 y " + options.size() + ".");
             return null;
         }
         return correctIndex - 1;

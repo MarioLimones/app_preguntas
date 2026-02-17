@@ -1,64 +1,61 @@
 package com.app.preguntas.preguntas.vf.service;
 
+import com.app.preguntas.preguntas.common.model.PageResult;
 import com.app.preguntas.preguntas.vf.model.TrueFalseQuestion;
+import com.app.preguntas.preguntas.vf.repository.TrueFalseQuestionRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class TrueFalseQuestionService {
 
-    private final AtomicLong idSequence = new AtomicLong(0);
-    private final Map<Long, TrueFalseQuestion> store = new ConcurrentHashMap<>();
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private final TrueFalseQuestionRepository repository;
+
+    public TrueFalseQuestionService(TrueFalseQuestionRepository repository) {
+        this.repository = repository;
+    }
+
+    public PageResult<TrueFalseQuestion> findPage(int page, Integer size) {
+        int pageSize = (size != null && size > 0) ? size : DEFAULT_PAGE_SIZE;
+        return new PageResult<>(findAll(), page, pageSize);
+    }
+
+    public long count() {
+        return repository.count();
+    }
 
     public List<TrueFalseQuestion> findAll() {
-        List<TrueFalseQuestion> items = new ArrayList<>(store.values());
-        items.sort(Comparator.comparingLong(TrueFalseQuestion::getId));
-        return items;
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<TrueFalseQuestion> findById(Long id) {
-        if (id == null) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(store.get(id));
+        return repository.findById(id);
     }
 
     public TrueFalseQuestion create(TrueFalseQuestion input) {
-        Long id = idSequence.incrementAndGet();
-        TrueFalseQuestion created = new TrueFalseQuestion(
-            id,
-            input.getStatement(),
-            input.getCorrectAnswer(),
-            input.getExplanation()
-        );
-        store.put(id, created);
-        return created;
+        // JPA handles ID generation
+        return repository.save(input);
     }
 
     public Optional<TrueFalseQuestion> update(Long id, TrueFalseQuestion input) {
-        if (id == null || !store.containsKey(id)) {
+        if (id == null || !repository.existsById(id)) {
             return Optional.empty();
         }
-        TrueFalseQuestion updated = new TrueFalseQuestion(
-            id,
-            input.getStatement(),
-            input.getCorrectAnswer(),
-            input.getExplanation()
-        );
-        store.put(id, updated);
-        return Optional.of(updated);
+        input.setId(id);
+        return Optional.of(repository.save(input));
     }
 
     public boolean delete(Long id) {
-        return store.remove(id) != null;
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public Optional<TrueFalseQuestion> getRandom() {
@@ -89,8 +86,9 @@ public class TrueFalseQuestionService {
     }
 
     public List<Long> getAllIdsSorted() {
-        List<Long> ids = new ArrayList<>(store.keySet());
-        ids.sort(Long::compareTo);
-        return ids;
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"))
+                .stream()
+                .map(TrueFalseQuestion::getId)
+                .toList();
     }
 }

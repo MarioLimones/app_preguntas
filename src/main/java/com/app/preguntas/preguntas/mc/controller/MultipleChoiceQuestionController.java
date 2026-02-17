@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -32,8 +33,10 @@ public class MultipleChoiceQuestionController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("questions", service.findAll());
+    public String list(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Integer size,
+            Model model) {
+        model.addAttribute("pageResult", service.findPage(page, size));
         return "mc/list";
     }
 
@@ -46,9 +49,9 @@ public class MultipleChoiceQuestionController {
 
     @PostMapping
     public String create(@Valid @ModelAttribute("form") MultipleChoiceQuestionForm form,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         List<String> options = validateAndParseOptions(form, bindingResult);
         List<Integer> correctIndexes = validateCorrectIndexes(form.getCorrectIndexesText(), options, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -74,10 +77,10 @@ public class MultipleChoiceQuestionController {
 
     @PostMapping("/{id}/answer")
     public String answer(@PathVariable Long id,
-                         @Valid @ModelAttribute("answerForm") MultipleChoiceAnswerForm answerForm,
-                         BindingResult bindingResult,
-                         Model model,
-                         RedirectAttributes redirectAttributes) {
+            @Valid @ModelAttribute("answerForm") MultipleChoiceAnswerForm answerForm,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         Optional<MultipleChoiceQuestion> question = service.findById(id);
         if (question.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
@@ -114,10 +117,10 @@ public class MultipleChoiceQuestionController {
 
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute("form") MultipleChoiceQuestionForm form,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            @Valid @ModelAttribute("form") MultipleChoiceQuestionForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         List<String> options = validateAndParseOptions(form, bindingResult);
         List<Integer> correctIndexes = validateCorrectIndexes(form.getCorrectIndexesText(), options, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -159,8 +162,8 @@ public class MultipleChoiceQuestionController {
     }
 
     private List<Integer> validateCorrectIndexes(String correctIndexesText,
-                                                 List<String> options,
-                                                 BindingResult bindingResult) {
+            List<String> options,
+            BindingResult bindingResult) {
         List<Integer> parsed = parseIndexes(correctIndexesText, bindingResult);
         if (parsed.isEmpty()) {
             bindingResult.rejectValue("correctIndexesText", "min", "Debes indicar al menos una opcion correcta.");
@@ -170,7 +173,7 @@ public class MultipleChoiceQuestionController {
             for (Integer index : parsed) {
                 if (index == null || index < 1 || index > options.size()) {
                     bindingResult.rejectValue("correctIndexesText", "range",
-                        "Las opciones correctas deben estar entre 1 y " + options.size() + ".");
+                            "Las opciones correctas deben estar entre 1 y " + options.size() + ".");
                     return new ArrayList<>();
                 }
             }
@@ -188,8 +191,8 @@ public class MultipleChoiceQuestionController {
     }
 
     private MultipleChoiceQuestion toQuestion(MultipleChoiceQuestionForm form,
-                                              List<String> options,
-                                              List<Integer> correctIndexes) {
+            List<String> options,
+            List<Integer> correctIndexes) {
         MultipleChoiceQuestion question = new MultipleChoiceQuestion();
         question.setStatement(form.getStatement());
         question.setOptions(options);

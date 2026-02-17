@@ -1,66 +1,60 @@
 package com.app.preguntas.preguntas.mc.service;
 
+import com.app.preguntas.preguntas.common.model.PageResult;
 import com.app.preguntas.preguntas.mc.model.MultipleChoiceQuestion;
+import com.app.preguntas.preguntas.mc.repository.MultipleChoiceQuestionRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class MultipleChoiceQuestionService {
 
-    private final AtomicLong idSequence = new AtomicLong(0);
-    private final Map<Long, MultipleChoiceQuestion> store = new ConcurrentHashMap<>();
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private final MultipleChoiceQuestionRepository repository;
+
+    public MultipleChoiceQuestionService(MultipleChoiceQuestionRepository repository) {
+        this.repository = repository;
+    }
+
+    public PageResult<MultipleChoiceQuestion> findPage(int page, Integer size) {
+        int pageSize = (size != null && size > 0) ? size : DEFAULT_PAGE_SIZE;
+        return new PageResult<>(findAll(), page, pageSize);
+    }
+
+    public long count() {
+        return repository.count();
+    }
 
     public List<MultipleChoiceQuestion> findAll() {
-        List<MultipleChoiceQuestion> items = new ArrayList<>(store.values());
-        items.sort(Comparator.comparingLong(MultipleChoiceQuestion::getId));
-        return items;
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Optional<MultipleChoiceQuestion> findById(Long id) {
-        if (id == null) {
-            return Optional.empty();
-        }
-        return Optional.ofNullable(store.get(id));
+        return repository.findById(id);
     }
 
     public MultipleChoiceQuestion create(MultipleChoiceQuestion input) {
-        Long id = idSequence.incrementAndGet();
-        MultipleChoiceQuestion created = new MultipleChoiceQuestion(
-            id,
-            input.getStatement(),
-            input.getOptions(),
-            input.getCorrectIndexes(),
-            input.getExplanation()
-        );
-        store.put(id, created);
-        return created;
+        return repository.save(input);
     }
 
     public Optional<MultipleChoiceQuestion> update(Long id, MultipleChoiceQuestion input) {
-        if (id == null || !store.containsKey(id)) {
+        if (id == null || !repository.existsById(id)) {
             return Optional.empty();
         }
-        MultipleChoiceQuestion updated = new MultipleChoiceQuestion(
-            id,
-            input.getStatement(),
-            input.getOptions(),
-            input.getCorrectIndexes(),
-            input.getExplanation()
-        );
-        store.put(id, updated);
-        return Optional.of(updated);
+        input.setId(id);
+        return Optional.of(repository.save(input));
     }
 
     public boolean delete(Long id) {
-        return store.remove(id) != null;
+        if (id != null && repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     public Optional<MultipleChoiceQuestion> getRandom() {
@@ -91,8 +85,9 @@ public class MultipleChoiceQuestionService {
     }
 
     public List<Long> getAllIdsSorted() {
-        List<Long> ids = new ArrayList<>(store.keySet());
-        ids.sort(Long::compareTo);
-        return ids;
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"))
+                .stream()
+                .map(MultipleChoiceQuestion::getId)
+                .toList();
     }
 }

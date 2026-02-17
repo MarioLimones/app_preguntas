@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
@@ -27,8 +28,10 @@ public class TrueFalseQuestionController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("questions", service.findAll());
+    public String list(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) Integer size,
+            Model model) {
+        model.addAttribute("pageResult", service.findPage(page, size));
         return "vf/list";
     }
 
@@ -41,9 +44,9 @@ public class TrueFalseQuestionController {
 
     @PostMapping
     public String create(@Valid @ModelAttribute("question") TrueFalseQuestion question,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "create");
             return "vf/form";
@@ -67,10 +70,10 @@ public class TrueFalseQuestionController {
 
     @PostMapping("/{id}/answer")
     public String answer(@PathVariable Long id,
-                         @Valid @ModelAttribute("answerForm") AnswerForm answerForm,
-                         BindingResult bindingResult,
-                         Model model,
-                         RedirectAttributes redirectAttributes) {
+            @Valid @ModelAttribute("answerForm") AnswerForm answerForm,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         Optional<TrueFalseQuestion> question = service.findById(id);
         if (question.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
@@ -101,10 +104,10 @@ public class TrueFalseQuestionController {
 
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
-                         @Valid @ModelAttribute("question") TrueFalseQuestion question,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes,
-                         Model model) {
+            @Valid @ModelAttribute("question") TrueFalseQuestion question,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mode", "edit");
             return "vf/form";

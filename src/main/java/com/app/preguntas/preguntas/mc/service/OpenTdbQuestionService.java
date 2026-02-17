@@ -1,6 +1,7 @@
 package com.app.preguntas.preguntas.mc.service;
 
 import com.app.preguntas.preguntas.mc.model.MultipleChoiceQuestion;
+
 import com.app.preguntas.preguntas.common.service.LibreTranslateService;
 import com.app.preguntas.preguntas.mc.service.opentdb.OpenTdbQuestion;
 import com.app.preguntas.preguntas.mc.service.opentdb.OpenTdbResponse;
@@ -29,22 +30,21 @@ public class OpenTdbQuestionService {
     private final LibreTranslateService libreTranslateService;
 
     public OpenTdbQuestionService(
-        @Value("${opentdb.api.base-url:https://opentdb.com/api.php}") String baseUrl,
-        RestTemplateBuilder restTemplateBuilder,
-        LibreTranslateService libreTranslateService
-    ) {
+            @Value("${opentdb.api.base-url:https://opentdb.com/api.php}") String baseUrl,
+            RestTemplateBuilder restTemplateBuilder,
+            LibreTranslateService libreTranslateService) {
         this.baseUrl = baseUrl;
         this.restTemplate = restTemplateBuilder.build();
         this.libreTranslateService = libreTranslateService;
     }
 
     public List<MultipleChoiceQuestion> fetchMultipleChoiceQuestions(int amount,
-                                                                      Integer category,
-                                                                      String difficulty) {
+            Integer category,
+            String difficulty) {
         int boundedAmount = Math.max(1, Math.min(amount, MAX_AMOUNT));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
-            .queryParam("amount", boundedAmount)
-            .queryParam("type", "multiple");
+                .queryParam("amount", boundedAmount)
+                .queryParam("type", "multiple");
 
         if (category != null) {
             builder.queryParam("category", category);
@@ -65,9 +65,8 @@ public class OpenTdbQuestionService {
         }
         if (response.responseCode() != SUCCESS_CODE) {
             throw new ResponseStatusException(
-                HttpStatus.BAD_GATEWAY,
-                "OpenTDB devolvio codigo: " + response.responseCode()
-            );
+                    HttpStatus.BAD_GATEWAY,
+                    "OpenTDB devolvio codigo: " + response.responseCode());
         }
 
         List<MultipleChoiceQuestion> mapped = new ArrayList<>();
@@ -90,18 +89,29 @@ public class OpenTdbQuestionService {
 
         String correct = HtmlUtils.htmlUnescape(question.correctAnswer());
 
+        // Traducción de pregunta y opciones
         List<String> textsToTranslate = new ArrayList<>();
         textsToTranslate.add(statement);
         textsToTranslate.add(correct);
         textsToTranslate.addAll(incorrectOptions);
-        List<String> translated = libreTranslateService.translateToSpanish(textsToTranslate);
-        if (translated.size() == textsToTranslate.size()) {
-            statement = translated.get(0);
-            correct = translated.get(1);
-            incorrectOptions.clear();
-            incorrectOptions.addAll(translated.subList(2, translated.size()));
+
+        try {
+            System.out.println("Traduciendo pregunta: " + statement);
+            List<String> translated = libreTranslateService.translateToSpanish(textsToTranslate);
+            if (translated != null && translated.size() == textsToTranslate.size()) {
+                statement = translated.get(0);
+                correct = translated.get(1);
+                incorrectOptions.clear();
+                incorrectOptions.addAll(translated.subList(2, translated.size()));
+                System.out.println("Traduccion completada con exito.");
+            } else {
+                System.out.println("Advertencia: El traductor devolvio un numero inconsistente de resultados.");
+            }
+        } catch (Exception e) {
+            System.err.println("Error critico traduciendo pregunta: " + e.getMessage());
         }
 
+        // Mezclar opciones
         List<String> options = new ArrayList<>();
         options.addAll(incorrectOptions);
         options.add(correct);
@@ -112,15 +122,15 @@ public class OpenTdbQuestionService {
         }
 
         String explanation = "Fuente: Open Trivia DB"
-            + (question.category() != null ? " | Categoria: " + HtmlUtils.htmlUnescape(question.category()) : "")
-            + (question.difficulty() != null ? " | Dificultad: " + HtmlUtils.htmlUnescape(question.difficulty()) : "");
+                + (question.category() != null ? " | Categoria: " + HtmlUtils.htmlUnescape(question.category()) : "")
+                + (question.difficulty() != null ? " | Dificultad: " + HtmlUtils.htmlUnescape(question.difficulty())
+                        : "");
 
         return new MultipleChoiceQuestion(
-            null,
-            statement,
-            options,
-            List.of(correctIndex),
-            explanation
-        );
+                null,
+                statement,
+                options,
+                List.of(correctIndex),
+                explanation);
     }
 }

@@ -83,10 +83,10 @@
     </section>
 
     <div class="bg-purple-100 rounded-lg shadow-sm p-6 border border-purple-200">
-      <div th:if="${#lists.isEmpty(questions)}" class="text-gray-600 text-center py-8">
+      <div th:if="${pageResult.empty}" class="text-gray-600 text-center py-8">
         No hay preguntas registradas. Crea la primera para comenzar.
       </div>
-      <div th:if="${!#lists.isEmpty(questions)}">
+      <div th:unless="${pageResult.empty}">
         <table class="w-full">
           <thead class="bg-gray-100">
             <tr>
@@ -97,7 +97,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr th:each="q : ${questions}" class="border-t hover:bg-gray-50">
+            <tr th:each="q : ${pageResult.content}" class="border-t hover:bg-gray-50">
               <td class="px-4 py-3 text-gray-800" th:text="${q.id}">1</td>
               <td class="px-4 py-3 text-gray-800" th:text="${q.statement}">Texto</td>
               <td class="px-4 py-3 text-gray-600 text-sm" th:text="${#lists.size(q.options)}">4</td>
@@ -117,6 +117,7 @@
           </tbody>
         </table>
       </div>
+      <div th:replace="fragments/pagination :: controls(pageResult=${pageResult}, baseUrl='/mc/questions')"></div>
     </div>
   </main>
 

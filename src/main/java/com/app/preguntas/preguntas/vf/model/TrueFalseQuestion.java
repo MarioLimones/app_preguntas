@@ -1,9 +1,13 @@
 package com.app.preguntas.preguntas.vf.model;
 
 import com.app.preguntas.preguntas.common.model.BaseQuestion;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "vf_questions")
 public class TrueFalseQuestion extends BaseQuestion {
 
     @NotNull(message = "Debes indicar la respuesta correcta.")

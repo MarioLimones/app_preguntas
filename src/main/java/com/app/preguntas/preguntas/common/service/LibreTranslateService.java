@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.Duration;
 
 @Service
 public class LibreTranslateService {
@@ -26,12 +27,14 @@ public class LibreTranslateService {
     private final boolean enabled;
 
     public LibreTranslateService(
-        RestTemplateBuilder restTemplateBuilder,
-        @Value("${libretranslate.api.base-url:https://libretranslate.com/translate}") String baseUrl,
-        @Value("${libretranslate.api.key:}") String apiKey,
-        @Value("${libretranslate.enabled:true}") boolean enabled
-    ) {
-        this.restTemplate = restTemplateBuilder.build();
+            RestTemplateBuilder restTemplateBuilder,
+            @Value("${libretranslate.api.base-url:http://127.0.0.1:5000/translate}") String baseUrl,
+            @Value("${libretranslate.api.key:}") String apiKey,
+            @Value("${libretranslate.enabled:true}") boolean enabled) {
+        this.restTemplate = restTemplateBuilder
+                .setConnectTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(30))
+                .build();
         this.baseUrl = baseUrl;
         this.apiKey = apiKey;
         this.enabled = enabled;
@@ -47,7 +50,7 @@ public class LibreTranslateService {
 
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("q", texts);
-        payload.put("source", "auto");
+        payload.put("source", "en");
         payload.put("target", "es");
         payload.put("format", "text");
         if (apiKey != null && !apiKey.isBlank()) {
@@ -60,25 +63,23 @@ public class LibreTranslateService {
         LibreTranslateResponse response;
         try {
             response = restTemplate.postForObject(
-                baseUrl,
-                new HttpEntity<>(payload, headers),
-                LibreTranslateResponse.class
-            );
+                    baseUrl,
+                    new HttpEntity<>(payload, headers),
+                    LibreTranslateResponse.class);
         } catch (org.springframework.web.client.HttpClientErrorException.BadRequest ex) {
             return texts;
         } catch (RestClientException ex) {
+            System.err.println("Error en LibreTranslate: " + ex);
             throw new ResponseStatusException(
-                HttpStatus.BAD_GATEWAY,
-                "No se pudo traducir con LibreTranslate. Revisa la configuracion de la API.",
-                ex
-            );
+                    HttpStatus.BAD_GATEWAY,
+                    "No se pudo traducir con LibreTranslate. Revisa la configuracion de la API.",
+                    ex);
         }
 
         if (response == null || response.translatedText() == null) {
             throw new ResponseStatusException(
-                HttpStatus.BAD_GATEWAY,
-                "LibreTranslate no devolvio traducciones."
-            );
+                    HttpStatus.BAD_GATEWAY,
+                    "LibreTranslate no devolvio traducciones.");
         }
 
         Object translated = response.translatedText();
@@ -94,8 +95,7 @@ public class LibreTranslateService {
         }
 
         throw new ResponseStatusException(
-            HttpStatus.BAD_GATEWAY,
-            "LibreTranslate devolvio un formato inesperado."
-        );
+                HttpStatus.BAD_GATEWAY,
+                "LibreTranslate devolvio un formato inesperado.");
     }
 }

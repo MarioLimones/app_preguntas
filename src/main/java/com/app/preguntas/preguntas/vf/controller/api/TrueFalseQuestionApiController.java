@@ -2,6 +2,8 @@ package com.app.preguntas.preguntas.vf.controller.api;
 
 import com.app.preguntas.preguntas.vf.model.TrueFalseQuestion;
 import com.app.preguntas.preguntas.vf.service.TrueFalseQuestionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/vf/questions")
+@Tag(name = "Verdadero/Falso", description = "CRUD de preguntas Verdadero/Falso")
 public class TrueFalseQuestionApiController {
 
     private final TrueFalseQuestionService service;
@@ -36,7 +39,7 @@ public class TrueFalseQuestionApiController {
     public ResponseEntity<TrueFalseQuestion> get(@PathVariable Long id) {
         Optional<TrueFalseQuestion> question = service.findById(id);
         return question.map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -47,10 +50,10 @@ public class TrueFalseQuestionApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<TrueFalseQuestion> update(@PathVariable Long id,
-                                                    @Valid @RequestBody TrueFalseQuestion question) {
+            @Valid @RequestBody TrueFalseQuestion question) {
         Optional<TrueFalseQuestion> updated = service.update(id, question);
         return updated.map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -64,7 +67,7 @@ public class TrueFalseQuestionApiController {
     @GetMapping("/random")
     public ResponseEntity<TrueFalseQuestion> random() {
         return service.getRandom()
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

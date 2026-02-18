@@ -1,8 +1,10 @@
 package com.app.preguntas.preguntas.common.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
@@ -11,8 +13,17 @@ public abstract class BaseQuestion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String statement;
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String explanation;
+
+    @Column(name = "category_id")
+    private String categoryId;
 
     public BaseQuestion() {
     }
@@ -45,5 +56,13 @@ public abstract class BaseQuestion {
 
     public void setExplanation(String explanation) {
         this.explanation = explanation;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 }

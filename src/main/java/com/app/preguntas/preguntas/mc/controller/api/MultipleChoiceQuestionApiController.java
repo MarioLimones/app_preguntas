@@ -3,6 +3,8 @@ package com.app.preguntas.preguntas.mc.controller.api;
 import com.app.preguntas.preguntas.mc.model.MultipleChoiceQuestion;
 import com.app.preguntas.preguntas.mc.service.MultipleChoiceQuestionService;
 import com.app.preguntas.preguntas.mc.service.OpenTdbQuestionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +25,14 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/mc/questions")
+@Tag(name = "Selección Múltiple", description = "CRUD e importación de preguntas de Selección Múltiple")
 public class MultipleChoiceQuestionApiController {
 
     private final MultipleChoiceQuestionService service;
     private final OpenTdbQuestionService openTdbQuestionService;
 
     public MultipleChoiceQuestionApiController(MultipleChoiceQuestionService service,
-                                               OpenTdbQuestionService openTdbQuestionService) {
+            OpenTdbQuestionService openTdbQuestionService) {
         this.service = service;
         this.openTdbQuestionService = openTdbQuestionService;
     }
@@ -43,7 +46,7 @@ public class MultipleChoiceQuestionApiController {
     public ResponseEntity<MultipleChoiceQuestion> get(@PathVariable Long id) {
         Optional<MultipleChoiceQuestion> question = service.findById(id);
         return question.map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -64,7 +67,7 @@ public class MultipleChoiceQuestionApiController {
         }
         Optional<MultipleChoiceQuestion> updated = service.update(id, question);
         return updated.map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -78,20 +81,20 @@ public class MultipleChoiceQuestionApiController {
     @GetMapping("/random")
     public ResponseEntity<MultipleChoiceQuestion> random() {
         return service.getRandom()
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/import")
     public ResponseEntity<List<MultipleChoiceQuestion>> importFromOpenTdb(
-        @RequestParam(defaultValue = "5") int amount,
-        @RequestParam(required = false) Integer category,
-        @RequestParam(required = false) String difficulty
-    ) {
-        List<MultipleChoiceQuestion> imported = openTdbQuestionService.fetchMultipleChoiceQuestions(amount, category, difficulty);
+            @RequestParam(defaultValue = "5") int amount,
+            @RequestParam(required = false) Integer category,
+            @RequestParam(required = false) String difficulty) {
+        List<MultipleChoiceQuestion> imported = openTdbQuestionService.fetchMultipleChoiceQuestions(amount, category,
+                difficulty);
         List<MultipleChoiceQuestion> created = imported.stream()
-            .map(service::create)
-            .toList();
+                .map(service::create)
+                .toList();
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 

@@ -29,7 +29,7 @@ public class TrueFalseApi {
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener una pregunta por ID")
-    public ResponseEntity<TrueFalseQuestion> getById(@PathVariable String id) {
+    public ResponseEntity<TrueFalseQuestion> getById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -39,12 +39,12 @@ public class TrueFalseApi {
     @Operation(summary = "Crear una nueva pregunta")
     @ResponseStatus(HttpStatus.CREATED)
     public TrueFalseQuestion create(@RequestBody TrueFalseQuestion question) {
-        return service.save(question); // Note: Service might use save() instead of create()
+        return service.create(question);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar una pregunta existente")
-    public ResponseEntity<TrueFalseQuestion> update(@PathVariable String id, @RequestBody TrueFalseQuestion question) {
+    public ResponseEntity<TrueFalseQuestion> update(@PathVariable Long id, @RequestBody TrueFalseQuestion question) {
         return service.update(id, question)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -52,7 +52,7 @@ public class TrueFalseApi {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar una pregunta")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (service.delete(id)) {
             return ResponseEntity.noContent().build();
         }

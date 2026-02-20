@@ -29,7 +29,7 @@ public class SingleChoiceApi {
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener una pregunta por ID")
-    public ResponseEntity<SingleChoiceQuestion> getById(@PathVariable String id) {
+    public ResponseEntity<SingleChoiceQuestion> getById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +44,7 @@ public class SingleChoiceApi {
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar una pregunta existente")
-    public ResponseEntity<SingleChoiceQuestion> update(@PathVariable String id,
+    public ResponseEntity<SingleChoiceQuestion> update(@PathVariable Long id,
             @RequestBody SingleChoiceQuestion question) {
         return service.update(id, question)
                 .map(ResponseEntity::ok)
@@ -53,7 +53,7 @@ public class SingleChoiceApi {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar una pregunta")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (service.delete(id)) {
             return ResponseEntity.noContent().build();
         }

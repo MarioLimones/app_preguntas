@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.app.quiz.features.mc.service.OpenTdbQuestionService;
+
 import java.util.List;
 
 @RestController
@@ -16,9 +18,26 @@ import java.util.List;
 public class MultipleChoiceApi {
 
     private final MultipleChoiceQuestionService service;
+    private final OpenTdbQuestionService openTdbService;
 
-    public MultipleChoiceApi(MultipleChoiceQuestionService service) {
+    public MultipleChoiceApi(MultipleChoiceQuestionService service,
+            OpenTdbQuestionService openTdbService) {
         this.service = service;
+        this.openTdbService = openTdbService;
+    }
+
+    @PostMapping("/import")
+    @Operation(summary = "Importar preguntas desde OpenTDB")
+    public List<MultipleChoiceQuestion> importQuestions(
+            @RequestParam(defaultValue = "5") int amount,
+            @RequestParam(required = false) Integer category,
+            @RequestParam(required = false) String difficulty) {
+        List<MultipleChoiceQuestion> questions = openTdbService.fetchMultipleChoiceQuestions(amount, category,
+                difficulty);
+        for (MultipleChoiceQuestion q : questions) {
+            service.create(q);
+        }
+        return questions;
     }
 
     @GetMapping
@@ -29,7 +48,7 @@ public class MultipleChoiceApi {
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtener una pregunta por ID")
-    public ResponseEntity<MultipleChoiceQuestion> getById(@PathVariable String id) {
+    public ResponseEntity<MultipleChoiceQuestion> getById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +63,7 @@ public class MultipleChoiceApi {
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar una pregunta existente")
-    public ResponseEntity<MultipleChoiceQuestion> update(@PathVariable String id,
+    public ResponseEntity<MultipleChoiceQuestion> update(@PathVariable Long id,
             @RequestBody MultipleChoiceQuestion question) {
         return service.update(id, question)
                 .map(ResponseEntity::ok)
@@ -53,7 +72,7 @@ public class MultipleChoiceApi {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar una pregunta")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (service.delete(id)) {
             return ResponseEntity.noContent().build();
         }

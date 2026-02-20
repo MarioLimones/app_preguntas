@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../../core/auth/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
     const [error, setError] = useState('');
@@ -15,7 +17,11 @@ const Login = () => {
             await login(username, password);
             navigate('/');
         } catch (err) {
-            setError('Credenciales inválidas');
+            if (!err.response) {
+                setError('No se pudo conectar con el servidor.');
+            } else {
+                setError('Credenciales inválidas');
+            }
         }
     };
 
@@ -37,13 +43,22 @@ const Login = () => {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Contraseña</label>
-                        <input
-                            type="password"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <div className="relative mt-1">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <button
+                                type="button"
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
                     <button
                         type="submit"

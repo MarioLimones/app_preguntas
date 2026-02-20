@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../../core/api/client';
-import { UserPlus, Pencil, Trash2, Shield, User as UserIcon, X, Check, AlertCircle } from 'lucide-react';
+import { UserPlus, Pencil, Trash2, Shield, User as UserIcon, X, Check, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -17,6 +17,7 @@ const Users = () => {
     const [editingUser, setEditingUser] = useState(null);
     const [formData, setFormData] = useState({ username: '', password: '', role: 'USER' });
     const [formError, setFormError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         fetchUsers();
@@ -45,12 +46,14 @@ const Users = () => {
             setFormData({ username: '', password: '', role: 'USER' });
         }
         setFormError('');
+        setShowPassword(false);
         setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setEditingUser(null);
+        setShowPassword(false);
     };
 
     const handleInputChange = (e) => {
@@ -223,14 +226,23 @@ const Users = () => {
                                 <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">
                                     {editingUser ? 'Contraseña (dejar en blanco para no cambiar)' : 'Contraseña'}
                                 </label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-gray-700"
-                                    placeholder="••••••••"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
+                                        className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:bg-white transition-all text-gray-700 pr-12"
+                                        placeholder="••••••••"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600 transition-colors p-1"
+                                    >
+                                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="space-y-1.5">

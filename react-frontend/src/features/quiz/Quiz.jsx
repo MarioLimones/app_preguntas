@@ -235,6 +235,13 @@ const Quiz = () => {
     const currentQ = questions[currentIndex];
     const currentAnswer = userAnswers[currentQ.id];
 
+    const isAnswered = () => {
+        if (type === 'mc') {
+            return Array.isArray(currentAnswer) && currentAnswer.length > 0;
+        }
+        return currentAnswer !== undefined && currentAnswer !== null;
+    };
+
     return (
         <div className="max-w-3xl mx-auto animate-in fade-in duration-500">
             <div className="mb-6 flex items-center justify-between">
@@ -319,10 +326,10 @@ const Quiz = () => {
                 <div className="mt-12 flex justify-end">
                     <button
                         onClick={handleNext}
-                        disabled={currentAnswer === undefined && (type !== 'mc' || !currentAnswer?.length)}
-                        className={`px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 ${(currentAnswer !== undefined || (type === 'mc' && currentAnswer?.length > 0))
-                                ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xl shadow-indigo-200'
-                                : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+                        disabled={!isAnswered()}
+                        className={`px-10 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 ${isAnswered()
+                            ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xl shadow-indigo-200'
+                            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
                             }`}
                     >
                         {currentIndex === questions.length - 1 ? 'Finalizar' : 'Siguiente'}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/layout :: head('Jugar V/F')"></head>
+
+<body class="bg-sky-50">
+  <header th:replace="fragments/layout :: header"></header>
+
+  <main class="container mx-auto p-6 max-w-3xl">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Pregunta Aleatoria</h1>
+      <p class="text-gray-600 mt-1">Responde verdadero o falso</p>
+    </div>
+
+    <div class="bg-blue-100 rounded-lg shadow-sm p-6 border border-blue-200">
+      <div class="mb-6">
+        <p class="text-lg text-gray-800" th:text="${question.statement}">Texto de la pregunta</p>
+      </div>
+
+      <form th:action="@{/vf/practicar/{id}/answer(id=${question.id})}" method="post" class="space-y-4">
+        <div th:replace="fragments/forms :: csrf"></div>
+
+        <div class="flex gap-4">
+          <label class="flex-1">
+            <input type="radio" name="answer" value="true" class="hidden peer" />
+            <div
+              class="border-2 border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-blue-50 peer-checked:border-blue-600 peer-checked:bg-blue-50">
+              <span class="text-lg font-semibold text-gray-700">Verdadero</span>
+            </div>
+          </label>
+          <label class="flex-1">
+            <input type="radio" name="answer" value="false" class="hidden peer" />
+            <div
+              class="border-2 border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-red-50 peer-checked:border-red-600 peer-checked:bg-red-50">
+              <span class="text-lg font-semibold text-gray-700">Falso</span>
+            </div>
+          </label>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+            Responder
+          </button>
+          <a th:href="@{/vf/preguntas}" href="/vf/preguntas"
+            class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400">
+            Volver
+          </a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+
+</html>

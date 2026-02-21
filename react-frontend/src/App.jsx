@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './core/auth/AuthContext';
+import { AuthProvider, useAuth } from './core/autenticacion/AuthContext';
 import MainLayout from './layout/MainLayout';
-import Login from './features/auth/Login';
-import Register from './features/auth/Register';
-import Dashboard from './features/dashboard/Dashboard';
-import Quiz from './features/quiz/Quiz';
-import History from './features/history/History';
-import UserManagement from './features/admin/UserManagement';
+import Login from './features/autenticacion/Login';
+import Register from './features/autenticacion/Register';
+import Panel from './features/panel/panel';
+import Preguntas from './features/preguntas/preguntas';
+import Historial from './features/historial/historial';
+import GestionUsuarios from './features/administracion/GestionUsuarios';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -33,12 +33,12 @@ const AppRoutes = () => {
           <MainLayout />
         </ProtectedRoute>
       }>
-        <Route index element={<Dashboard />} />
-        <Route path="quiz/:type" element={<Quiz />} />
-        <Route path="history" element={<History />} />
+        <Route index element={<Panel />} />
+        <Route path="Preguntas/:type" element={<Preguntas />} />
+        <Route path="Historial" element={<Historial />} />
         <Route path="users" element={
           <AdminRoute>
-            <UserManagement />
+            <GestionUsuarios />
           </AdminRoute>
         } />
       </Route>

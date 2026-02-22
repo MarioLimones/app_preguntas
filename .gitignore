@@ -34,6 +34,8 @@ build/
 
 ### Node / Frontend ###
 node/
+node_modules/
+**/node_modules/
 dist/
 **/dist/
 .npm/

@@ -11,6 +11,7 @@ services:
       MYSQL_ROOT_PASSWORD: "1234"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./db/init/mysql:/docker-entrypoint-initdb.d:ro
 
   mongo:
     image: mongo:7.0
@@ -19,6 +20,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+      - ./db/init/mongo:/docker-entrypoint-initdb.d:ro
 
   libretranslate:
     image: libretranslate/libretranslate:latest

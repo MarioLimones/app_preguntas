@@ -62,7 +62,7 @@
                 <tbody>
                   <tr th:each="item, iter : ${items}" class="border-t border-slate-200/80 transition hover:bg-sky-50">
                     <td class="px-4 py-3 text-slate-800" th:text="${iter.index + 1}">1</td>
-                    <td class="px-4 py-3 text-slate-800"
+                    <td class="px-4 py-3 text-slate-800 whitespace-pre-wrap"
                       th:text="${item.question != null ? item.question.statement : 'Pregunta no disponible'}">Texto</td>
                     <td class="px-4 py-3">
                       <span class="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold"

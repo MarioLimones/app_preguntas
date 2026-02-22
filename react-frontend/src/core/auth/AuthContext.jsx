@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
         const authHeader = 'Basic ' + btoa(username + ':' + password);
         try {
             // Test credentials with login endpoint
-            const response = await api.post('/autenticacion/login', { username, password });
+            const response = await api.post('/auth/login', { username, password });
             const userData = { ...response.data, auth: authHeader };
 
             setUser(userData);
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (username, password) => {
         try {
-            await api.post('/autenticacion/register', { username, password });
+            await api.post('/auth/register', { username, password });
             // Logic: auto login after register? Or redirect to login? Let's auto login.
             return login(username, password);
         } catch (error) {

@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.upload;
+package com.app.preguntas.funcionalidades.subida;
 
 import com.app.preguntas.funcionalidades.seleccion_multiple.servicio.SeleccionMultipleServicioPreguntas;
 import com.app.preguntas.funcionalidades.seleccion_unica.servicio.SeleccionUnicaServicioPreguntas;
@@ -24,7 +24,7 @@ public class QuestionUploadController {
 
     @GetMapping
     public String showForm() {
-        return "subir/formulario";
+        return "subir/form";
     }
 
     @PostMapping
@@ -43,7 +43,11 @@ public class QuestionUploadController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al procesar el archivo: " + e.getMessage());
         }
-        return "redirect:/upload";
+        return "redirect:/subir";
     }
 }
+
+
+
+
 

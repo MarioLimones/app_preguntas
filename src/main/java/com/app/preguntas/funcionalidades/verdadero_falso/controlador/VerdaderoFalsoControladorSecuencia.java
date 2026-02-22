@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.verdadero_falso.controller;
+package com.app.preguntas.funcionalidades.verdadero_falso.controlador;
 
 import com.app.preguntas.funcionalidades.verdadero_falso.modelo.FormularioRespuesta;
 import com.app.preguntas.funcionalidades.verdadero_falso.modelo.ItemRevision;
@@ -162,6 +162,10 @@ public class VerdaderoFalsoControladorSecuencia {
         return null;
     }
 }
+
+
+
+
 
 
 

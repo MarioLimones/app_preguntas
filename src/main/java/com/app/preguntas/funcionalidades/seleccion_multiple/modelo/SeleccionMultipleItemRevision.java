@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.model;
+package com.app.preguntas.funcionalidades.seleccion_multiple.modelo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -70,6 +70,7 @@ public class SeleccionMultipleItemRevision {
         return result;
     }
 }
+
 
 
 

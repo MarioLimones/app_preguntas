@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.model;
+package com.app.preguntas.funcionalidades.seleccion_multiple.modelo;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -47,6 +47,7 @@ public class SeleccionMultipleFormularioPregunta {
         this.explanation = explanation;
     }
 }
+
 
 
 

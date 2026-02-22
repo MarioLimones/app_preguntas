@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.service;
+package com.app.preguntas.funcionalidades.seleccion_unica.servicio;
 
 import com.app.preguntas.funcionalidades.seleccion_unica.modelo.PreguntaSeleccionUnica;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -293,6 +293,10 @@ public class SeleccionUnicaQuestionImportService {
         return trimmed.isEmpty() ? null : trimmed;
     }
 }
+
+
+
+
 
 
 

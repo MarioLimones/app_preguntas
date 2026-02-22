@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.model;
+package com.app.preguntas.funcionalidades.seleccion_unica.modelo;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -15,6 +15,7 @@ public class SeleccionUnicaFormularioRespuesta {
         this.selectedIndex = selectedIndex;
     }
 }
+
 
 
 

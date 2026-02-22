@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.verdadero_falso.model;
+package com.app.preguntas.funcionalidades.verdadero_falso.modelo;
 
 import com.app.preguntas.nucleo.PreguntaBase;
 import jakarta.persistence.Entity;
@@ -41,6 +41,7 @@ public class PreguntaVerdaderoFalso extends PreguntaBase {
         this.correctAnswer = correctAnswer;
     }
 }
+
 
 
 

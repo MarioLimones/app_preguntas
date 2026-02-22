@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.results;
+package com.app.preguntas.funcionalidades.resultados;
 
 import com.app.preguntas.nucleo.ResultadoExamen;
 import com.app.preguntas.funcionalidades.resultados.ServicioResultadoExamen;
@@ -65,6 +65,9 @@ public class ControladorApiResultadoExamen {
         return ResponseEntity.notFound().build();
     }
 }
+
+
+
 
 
 

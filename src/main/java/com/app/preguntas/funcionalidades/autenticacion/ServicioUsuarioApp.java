@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.auth;
+package com.app.preguntas.funcionalidades.autenticacion;
 
 import com.app.preguntas.nucleo.UsuarioApp;
 import com.app.preguntas.funcionalidades.autenticacion.RepositorioUsuarioApp;
@@ -73,6 +73,10 @@ public class ServicioUsuarioApp {
         return repository.count();
     }
 }
+
+
+
+
 
 
 

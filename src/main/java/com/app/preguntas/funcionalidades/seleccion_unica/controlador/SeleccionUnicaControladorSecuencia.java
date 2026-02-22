@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.controller;
+package com.app.preguntas.funcionalidades.seleccion_unica.controlador;
 
 import com.app.preguntas.funcionalidades.seleccion_unica.modelo.SeleccionUnicaFormularioRespuesta;
 import com.app.preguntas.funcionalidades.seleccion_unica.modelo.PreguntaSeleccionUnica;
@@ -59,7 +59,7 @@ public class SeleccionUnicaControladorSecuencia {
             return "redirect:/sc/secuencia/start";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new SeleccionUnicaFormularioRespuesta());
+        model.addAttribute("answerForm", new SeleccionUnicaFormularioRespuesta());
         model.addAttribute("sequence", sequence);
         model.addAttribute("answered", sequence.getAnswers().get(questionId));
         return "seleccion_unica/secuencia";
@@ -67,7 +67,7 @@ public class SeleccionUnicaControladorSecuencia {
 
     @PostMapping("/answer")
     public String answer(@RequestParam Long questionId,
-                         @Valid @ModelAttribute("FormularioRespuesta") SeleccionUnicaFormularioRespuesta FormularioRespuesta,
+                         @Valid @ModelAttribute("answerForm") SeleccionUnicaFormularioRespuesta answerForm,
                          BindingResult bindingResult,
                          HttpSession session,
                          Model model,
@@ -82,7 +82,7 @@ public class SeleccionUnicaControladorSecuencia {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
             return "redirect:/sc/secuencia";
         }
-        if (!isValidAnswer(FormularioRespuesta.getSelectedIndex(), question.get())) {
+        if (!isValidAnswer(answerForm.getSelectedIndex(), question.get())) {
             bindingResult.rejectValue("selectedIndex", "invalid", "Selecciona una opcion valida.");
         }
         if (bindingResult.hasErrors()) {
@@ -90,12 +90,12 @@ public class SeleccionUnicaControladorSecuencia {
             model.addAttribute("sequence", sequence);
             return "seleccion_unica/secuencia";
         }
-        sequence.getAnswers().put(questionId, FormularioRespuesta.getSelectedIndex());
-        boolean correct = FormularioRespuesta.getSelectedIndex().equals(question.get().getCorrectIndex());
+        sequence.getAnswers().put(questionId, answerForm.getSelectedIndex());
+        boolean correct = answerForm.getSelectedIndex().equals(question.get().getCorrectIndex());
         model.addAttribute("question", question.get());
         model.addAttribute("sequence", sequence);
         model.addAttribute("result", correct);
-        model.addAttribute("answered", FormularioRespuesta.getSelectedIndex());
+        model.addAttribute("answered", answerForm.getSelectedIndex());
         return "seleccion_unica/secuencia";
     }
 
@@ -171,6 +171,10 @@ public class SeleccionUnicaControladorSecuencia {
         return selectedIndex >= 0 && selectedIndex < question.getOptions().size();
     }
 }
+
+
+
+
 
 
 

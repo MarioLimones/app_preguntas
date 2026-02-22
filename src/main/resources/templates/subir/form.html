@@ -33,7 +33,7 @@
 
         <!-- Formulario de subida -->
         <div class="bg-orange-100 rounded-lg shadow-sm p-6 border border-orange-200 mb-6">
-            <form th:action="@{/upload}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <form th:action="@{/subir}" method="post" enctype="multipart/form-data" class="space-y-4">
                 <div th:replace="fragments/forms :: csrf"></div>
 
                 <div>
@@ -66,14 +66,14 @@
                 <h2 class="text-xl font-bold text-gray-800 mb-4">📄 Formato JSON</h2>
                 <p class="text-sm text-gray-600 mb-3">Ejemplo de estructura:</p>
                 <pre class="bg-gray-100 p-3 rounded text-xs overflow-x-auto"><code>{
-  "trueFalse": [
+  "VerdaderoFalso": [
     {
       "statement": "La Tierra es plana",
       "correctAnswer": false,
       "explanation": "La Tierra es un geoide"
     }
   ],
-  "singleChoice": [
+  "SeleccionUnica": [
     {
       "statement": "¿Capital de España?",
       "options": ["Madrid", "Barcelona", "Sevilla"],
@@ -81,7 +81,7 @@
       "explanation": "Madrid es la capital"
     }
   ],
-  "multipleChoice": [
+  "SeleccionMultiple": [
     {
       "statement": "Lenguajes de programación",
       "options": ["Java", "Python", "HTML", "CSS"],
@@ -121,11 +121,11 @@ MC,Lenguajes,Java;Python;HTML;CSS,0;1,HTML y CSS son marcado</code></pre>
                 Descarga archivos de ejemplo para ver el formato correcto (puedes utilizarlo como plantilla):
             </p>
             <div class="flex gap-3">
-                <a href="/examples/preguntas-example.json" download
+                <a href="/examples/questions-example.json" download
                     class="text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     Descargar ejemplo JSON
                 </a>
-                <a href="/examples/preguntas-example.csv" download
+                <a href="/examples/questions-example.csv" download
                     class="text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     Descargar ejemplo CSV
                 </a>

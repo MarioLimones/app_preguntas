@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.upload;
+package com.app.preguntas.funcionalidades.subida;
 
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.PreguntaSeleccionMultiple;
 import com.app.preguntas.funcionalidades.seleccion_multiple.servicio.SeleccionMultipleServicioPreguntas;
@@ -165,4 +165,8 @@ public class QuestionUploadService {
         public List<PreguntaSeleccionMultiple> SeleccionMultiple;
     }
 }
+
+
+
+
 

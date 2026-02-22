@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.model;
+package com.app.preguntas.funcionalidades.seleccion_multiple.modelo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,6 +64,7 @@ public class SeleccionMultipleSesionSecuencia implements Serializable {
         return answers.size();
     }
 }
+
 
 
 

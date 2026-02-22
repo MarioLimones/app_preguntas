@@ -69,7 +69,8 @@
                             <span th:unless="${item.correct}"
                                 class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">Incorrecta</span>
                         </div>
-                        <p class="text-lg font-medium text-gray-800" th:text="${item.question.statement}">
+                        <p class="text-lg font-medium text-gray-800 whitespace-pre-wrap"
+                            th:text="${item.question.statement}">
                             Enunciado de la pregunta
                         </p>
                     </div>

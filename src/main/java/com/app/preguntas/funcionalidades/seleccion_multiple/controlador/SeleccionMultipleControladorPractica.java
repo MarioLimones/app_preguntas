@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.controller;
+package com.app.preguntas.funcionalidades.seleccion_multiple.controlador;
 
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.SeleccionMultipleFormularioRespuesta;
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.PreguntaSeleccionMultiple;
@@ -38,38 +38,38 @@ public class SeleccionMultipleControladorPractica {
             return "redirect:/mc/preguntas";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new SeleccionMultipleFormularioRespuesta());
+        model.addAttribute("answerForm", new SeleccionMultipleFormularioRespuesta());
         model.addAttribute("mode", "random");
         return "seleccion_multiple/practicar";
     }
 
     @GetMapping("/next")
     public String next(@RequestParam(required = false) Long currentId,
-                       Model model,
-                       RedirectAttributes redirectAttributes) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
         Optional<PreguntaSeleccionMultiple> question = service.getNext(currentId);
         if (question.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "No hay preguntas disponibles.");
             return "redirect:/mc/preguntas";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new SeleccionMultipleFormularioRespuesta());
+        model.addAttribute("answerForm", new SeleccionMultipleFormularioRespuesta());
         model.addAttribute("mode", "next");
         return "seleccion_multiple/practicar";
     }
 
     @PostMapping("/answer")
     public String answer(@RequestParam Long questionId,
-                         @Valid @ModelAttribute("FormularioRespuesta") SeleccionMultipleFormularioRespuesta FormularioRespuesta,
-                         BindingResult bindingResult,
-                         Model model,
-                         RedirectAttributes redirectAttributes) {
+            @Valid @ModelAttribute("answerForm") SeleccionMultipleFormularioRespuesta answerForm,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
         Optional<PreguntaSeleccionMultiple> question = service.findById(questionId);
         if (question.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
             return "redirect:/mc/preguntas";
         }
-        List<Integer> selected = normalizeIndexes(FormularioRespuesta.getSelectedIndexes());
+        List<Integer> selected = normalizeIndexes(answerForm.getSelectedIndexes());
         if (!isValidAnswer(selected, question.get())) {
             bindingResult.rejectValue("selectedIndexes", "invalid", "Selecciona opciones validas.");
         }
@@ -131,8 +131,3 @@ public class SeleccionMultipleControladorPractica {
         return builder.toString();
     }
 }
-
-
-
-
-

@@ -44,7 +44,8 @@ public class ApiVerdaderoFalso {
 
     @PutMapping("/{id}")
     @Operation(summary = "Actualizar una pregunta existente")
-    public ResponseEntity<PreguntaVerdaderoFalso> update(@PathVariable Long id, @RequestBody PreguntaVerdaderoFalso question) {
+    public ResponseEntity<PreguntaVerdaderoFalso> update(@PathVariable Long id,
+            @RequestBody PreguntaVerdaderoFalso question) {
         return service.update(id, question)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -59,4 +60,3 @@ public class ApiVerdaderoFalso {
         return ResponseEntity.notFound().build();
     }
 }
-

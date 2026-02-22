@@ -66,6 +66,10 @@ public class ResultadoPagina<T> {
         return totalPages;
     }
 
+    public int getTotalPages() {
+        return totalPages;
+    }
+
     public boolean isHasPrevious() {
         return page > 0;
     }

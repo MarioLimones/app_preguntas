@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.verdadero_falso.model;
+package com.app.preguntas.funcionalidades.verdadero_falso.modelo;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -15,6 +15,7 @@ public class FormularioRespuesta {
         this.userAnswer = userAnswer;
     }
 }
+
 
 
 

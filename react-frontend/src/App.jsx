@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './core/autenticacion/AuthContext';
+import { AuthProvider, useAuth } from './core/auth/AuthContext';
 import MainLayout from './layout/MainLayout';
 import Login from './features/autenticacion/Login';
 import Register from './features/autenticacion/Register';
-import Panel from './features/panel/panel';
-import Preguntas from './features/preguntas/preguntas';
-import Historial from './features/historial/historial';
+import Panel from './features/panel/Panel';
+import Preguntas from './features/preguntas/Preguntas';
+import Historial from './features/historial/Historial';
 import GestionUsuarios from './features/administracion/GestionUsuarios';
 
 const ProtectedRoute = ({ children }) => {
@@ -34,8 +34,8 @@ const AppRoutes = () => {
         </ProtectedRoute>
       }>
         <Route index element={<Panel />} />
-        <Route path="Preguntas/:type" element={<Preguntas />} />
-        <Route path="Historial" element={<Historial />} />
+        <Route path="preguntas/:type" element={<Preguntas />} />
+        <Route path="historial" element={<Historial />} />
         <Route path="users" element={
           <AdminRoute>
             <GestionUsuarios />

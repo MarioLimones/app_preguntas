@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.model;
+package com.app.preguntas.funcionalidades.seleccion_unica.modelo;
 
 public class SeleccionUnicaItemRevision {
 
@@ -25,6 +25,7 @@ public class SeleccionUnicaItemRevision {
         return userAnswer.equals(question.getCorrectIndex());
     }
 }
+
 
 
 

@@ -12,41 +12,84 @@
       <p class="text-gray-600 mt-1">Responde verdadero o falso</p>
     </div>
 
-    <div class="bg-blue-100 rounded-lg shadow-sm p-6 border border-blue-200">
-      <div class="mb-6">
-        <p class="text-lg text-gray-800" th:text="${question.statement}">Texto de la pregunta</p>
+    <div class="rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-slate-200/80">
+      <div>
+        <h2 class="text-lg text-slate-900 font-semibold whitespace-pre-wrap" th:text="${question.statement}">Texto de la
+          pregunta</h2>
       </div>
+    </div>
 
-      <form th:action="@{/vf/practicar/{id}/answer(id=${question.id})}" method="post" class="space-y-4">
+    <div class="mt-6 rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-slate-200/80">
+
+      <form th:action="@{/vf/practicar/{id}/answer(id=${question.id})}" th:object="${answerForm}" method="post"
+        class="space-y-4">
         <div th:replace="fragments/forms :: csrf"></div>
 
-        <div class="flex gap-4">
-          <label class="flex-1">
-            <input type="radio" name="answer" value="true" class="hidden peer" />
-            <div
-              class="border-2 border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-blue-50 peer-checked:border-blue-600 peer-checked:bg-blue-50">
-              <span class="text-lg font-semibold text-gray-700">Verdadero</span>
+        <div class="space-y-3">
+          <label
+            class="group flex items-center gap-4 cursor-pointer rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-4 text-slate-800 transition-all hover:border-sky-400/40 hover:bg-sky-50">
+            <input class="h-5 w-5 rounded-full border-slate-300 bg-white text-sky-400 focus:ring-sky-400/50"
+              type="radio" th:field="*{userAnswer}" value="true" required />
+            <div class="flex-1">
+              <span class="text-base font-medium group-hover:text-sky-900">Verdadero</span>
             </div>
           </label>
-          <label class="flex-1">
-            <input type="radio" name="answer" value="false" class="hidden peer" />
-            <div
-              class="border-2 border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:bg-red-50 peer-checked:border-red-600 peer-checked:bg-red-50">
-              <span class="text-lg font-semibold text-gray-700">Falso</span>
+          <label
+            class="group flex items-center gap-4 cursor-pointer rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-4 text-slate-800 transition-all hover:border-sky-400/40 hover:bg-sky-50">
+            <input class="h-5 w-5 rounded-full border-slate-300 bg-white text-sky-400 focus:ring-sky-400/50"
+              type="radio" th:field="*{userAnswer}" value="false" required />
+            <div class="flex-1">
+              <span class="text-base font-medium group-hover:text-sky-900">Falso</span>
             </div>
           </label>
         </div>
+        <div th:if="${#fields.hasErrors('userAnswer')}" th:errors="*{userAnswer}"
+          class="text-red-500 text-sm font-medium mt-2"></div>
 
-        <div class="flex gap-3 pt-4">
-          <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-            Responder
+        <div class="mt-8 flex gap-4">
+          <button type="submit"
+            class="flex-1 inline-flex items-center justify-center rounded-full bg-sky-400 px-8 py-4 text-lg font-bold text-sky-950 shadow-xl shadow-sky-500/30 transition hover:-translate-y-1 hover:bg-sky-300">
+            Confirmar Respuesta
           </button>
           <a th:href="@{/vf/preguntas}" href="/vf/preguntas"
-            class="bg-gray-300 text-gray-700 px-6 py-2 rounded hover:bg-gray-400">
+            class="inline-flex items-center justify-center rounded-full bg-slate-200 px-8 py-4 text-lg font-bold text-slate-700 shadow-xl shadow-slate-300/30 transition hover:-translate-y-1 hover:bg-slate-300">
             Volver
           </a>
         </div>
       </form>
+
+      <div class="mt-8 space-y-6" th:if="${result != null}">
+        <div class="rounded-3xl border-2 p-6 transition-all duration-300"
+          th:classappend="${result} ? 'border-sky-400/30 bg-sky-500/10 text-sky-900' : 'border-yellow-400/30 bg-yellow-50 text-yellow-900'">
+
+          <div class="flex items-center gap-4 mb-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full text-2xl shadow-inner"
+              th:classappend="${result} ? 'bg-sky-400 text-sky-950' : 'bg-yellow-400 text-yellow-950'"
+              th:text="${result} ? '✅' : '❌'">
+              ✅
+            </div>
+            <div>
+              <h3 class="text-xl font-bold" th:text="${result} ? '¡Respuesta correcta!' : 'Respuesta incorrecta'">
+                Resultado
+              </h3>
+              <p class="text-sm opacity-80" th:if="${!result}">
+                Tu respuesta:
+                <strong th:text="${answerValue != null ? (answerValue ? 'Verdadero' : 'Falso') : '-'}">-</strong>
+              </p>
+              <p class="text-sm opacity-80" th:if="${!result}">
+                La opción correcta era
+                <strong th:text="${question.correctAnswer ? 'Verdadero' : 'Falso'}">Verdadero</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div th:if="${question.explanation != null and !question.explanation.isEmpty()}"
+            class="mt-4 p-4 rounded-2xl bg-white/50 border border-current/10">
+            <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-1">Explicación</h4>
+            <p class="text-sm italic" th:text="${question.explanation}">Aquí va la explicación.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 

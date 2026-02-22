@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.upload;
+package com.app.preguntas.funcionalidades.subida;
 
 import java.util.List;
 
@@ -19,3 +19,4 @@ public class QuestionUploadResult {
         return errors;
     }
 }
+

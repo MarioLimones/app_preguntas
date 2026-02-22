@@ -106,19 +106,17 @@
 
     <!-- Sección de Pruebas (Solo para desarrollo) -->
     <section class="mt-12 pt-8 border-t border-gray-200">
+    <!-- SecciÃ³n de Pruebas (Solo para desarrollo) -->
+    <section class="mt-12 pt-8 border-t border-gray-200">
       <h2 class="text-lg font-semibold text-gray-500 mb-4">Panel de Pruebas (Debug)</h2>
       <div class="flex gap-4">
-        <a th:href="@{/pagina-no-existe}"
+        <a th:href="@{/error}" href="/error"
           class="text-sm bg-gray-200 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-300 transition">
-          Probar 404
-        </a>
-        <a th:href="@{/debug/error500}"
-          class="text-sm bg-red-100 text-red-700 px-3 py-1.5 rounded hover:bg-red-200 transition border border-red-200">
-          Probar 500
+          Probar Error
         </a>
       </div>
       <p class="text-xs text-gray-400 mt-2">
-        Usa estos botones para verificar que las páginas de error personalizadas se ven correctamente.
+        Boton de prueba de error 500.
       </p>
     </section>
   </main>
@@ -127,3 +125,4 @@
 </body>
 
 </html>
+

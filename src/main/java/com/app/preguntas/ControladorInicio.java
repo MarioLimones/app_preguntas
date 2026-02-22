@@ -3,11 +3,9 @@ package com.app.preguntas;
 import com.app.preguntas.funcionalidades.seleccion_multiple.servicio.SeleccionMultipleServicioPreguntas;
 import com.app.preguntas.funcionalidades.seleccion_unica.servicio.SeleccionUnicaServicioPreguntas;
 import com.app.preguntas.funcionalidades.verdadero_falso.servicio.VerdaderoFalsoServicioPreguntas;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 public class ControladorInicio {
@@ -32,16 +30,10 @@ public class ControladorInicio {
         return "inicio";
     }
 
-    @GetMapping("/debug/error500")
-    public String error500() {
-        throw new RuntimeException("Error 500 de prueba");
-    }
-
-    @GetMapping("/debug/error404")
-    public String error404() {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Error 404 de prueba");
-    }
 }
+
+
+
 
 
 

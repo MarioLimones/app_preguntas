@@ -1,7 +1,7 @@
-package com.app.preguntas.funcionalidades.auth;
+package com.app.preguntas.funcionalidades.autenticacion;
 
 import com.app.preguntas.nucleo.UsuarioApp;
-import org.springframework.data.mongodb.repositorio.MongoRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,6 +12,9 @@ public interface RepositorioUsuarioApp extends MongoRepository<UsuarioApp, Strin
 
     boolean existsByUsername(String username);
 }
+
+
+
 
 
 

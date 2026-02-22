@@ -19,61 +19,59 @@
         th:style="'width: ' + ${(sequence.currentIndex + 1) * 100 / sequence.totalQuestions} + '%'"></div>
     </div>
 
-    <div class="bg-blue-100 rounded-lg shadow-sm p-6 border border-blue-200">
-      <div class="mb-6">
-        <p class="text-lg text-gray-800 font-medium" th:text="${question.statement}">Texto de la pregunta</p>
+    <div class="rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-slate-200/80">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600 mb-3">
+          Pregunta #<span th:text="${question.id}">1</span>
+        </p>
+        <h2 class="text-lg text-slate-900 font-semibold whitespace-pre-wrap" th:text="${question.statement}">Texto de la
+          pregunta</h2>
       </div>
+    </div>
+
+    <div class="mt-6 rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-2xl shadow-slate-200/80">
 
       <!-- Mostrar resultado si ya se respondió -->
-      <div th:if="${result != null}" class="mb-6">
-        <div th:if="${result}" class="bg-green-100 border-2 border-green-500 rounded-lg p-4 mb-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-2xl">✅</span>
-            <span class="text-lg font-bold text-green-800">¡Correcto!</span>
-          </div>
-          <p class="text-green-700">
-            La respuesta correcta es: <strong
-              th:text="${question.correctAnswer ? 'Verdadero' : 'Falso'}">Verdadero</strong>
-          </p>
-          <p th:if="${question.explanation != null and !question.explanation.isEmpty()}"
-            class="text-sm text-green-600 mt-2 italic" th:text="${question.explanation}">
-            Explicación de la respuesta
-          </p>
-        </div>
+      <div th:if="${result != null}" class="mb-6 space-y-6">
+        <div class="rounded-3xl border-2 p-6 transition-all duration-300"
+          th:classappend="${result} ? 'border-sky-400/30 bg-sky-500/10 text-sky-900' : 'border-yellow-400/30 bg-yellow-50 text-yellow-900'">
 
-        <div th:unless="${result}" class="bg-red-100 border-2 border-red-500 rounded-lg p-4 mb-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-2xl">❌</span>
-            <span class="text-lg font-bold text-red-800">Incorrecto</span>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full text-2xl shadow-inner"
+              th:classappend="${result} ? 'bg-sky-400 text-sky-950' : 'bg-yellow-400 text-yellow-950'"
+              th:text="${result} ? '✅' : '❌'">
+              ✅
+            </div>
+            <div>
+              <h3 class="text-xl font-bold" th:text="${result} ? '¡Respuesta correcta!' : 'Respuesta incorrecta'">
+                Resultado
+              </h3>
+              <p class="text-sm opacity-80" th:if="${!result}">
+                La opción correcta era
+                <strong th:text="${question.correctAnswer ? 'Verdadero' : 'Falso'}">Verdadero</strong>.
+              </p>
+            </div>
           </div>
-          <p class="text-red-700">
-            Tu respuesta: <strong th:text="${answered ? 'Verdadero' : 'Falso'}">Falso</strong>
-          </p>
-          <p class="text-red-700">
-            La respuesta correcta es: <strong
-              th:text="${question.correctAnswer ? 'Verdadero' : 'Falso'}">Verdadero</strong>
-          </p>
-          <p th:if="${question.explanation != null and !question.explanation.isEmpty()}"
-            class="text-sm text-red-600 mt-2 italic" th:text="${question.explanation}">
-            Explicación de la respuesta
-          </p>
+
+          <div th:if="${question.explanation != null and !question.explanation.isEmpty()}"
+            class="mt-4 p-4 rounded-2xl bg-white/50 border border-current/10">
+            <h4 class="text-xs font-bold uppercase tracking-wider opacity-60 mb-1">Explicación</h4>
+            <p class="text-sm italic" th:text="${question.explanation}">Aquí va la explicación.</p>
+          </div>
         </div>
 
         <!-- Botones después de responder -->
-        <div class="flex gap-3">
+        <div class="flex flex-wrap gap-4">
           <form th:if="${sequence.hasNext()}" th:action="@{/vf/secuencia/next}" method="post" class="flex-1">
             <div th:replace="fragments/forms :: csrf"></div>
             <button type="submit"
-              class="w-full bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 font-semibold">
+              class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-sky-400 px-8 py-4 text-lg font-bold text-sky-950 shadow-xl shadow-sky-500/30 transition hover:-translate-y-1 hover:bg-sky-300">
               ➡️ Siguiente Pregunta
             </button>
           </form>
-          <a th:unless="${sequence.hasNext()}" th:href="@{/vf/secuencia/review}"
-            class="flex-1 bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 text-center font-semibold">
+          <a th:unless="${sequence.hasNext()}" th:href="@{/vf/secuencia/revision}"
+            class="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-green-500 px-8 py-4 text-lg font-bold text-white shadow-xl shadow-green-500/30 transition hover:-translate-y-1 hover:bg-green-400 text-center">
             🏁 Ver Resultados Finales
-          </a>
-          <a th:href="@{/vf/secuencia/review}" class="bg-gray-300 text-gray-700 px-6 py-3 rounded hover:bg-gray-400">
-            📊 Ver Revisión
           </a>
         </div>
       </div>
@@ -83,32 +81,32 @@
         <div th:replace="fragments/forms :: csrf"></div>
         <input type="hidden" name="questionId" th:value="${question.id}" />
 
-        <div class="flex gap-4">
-          <label class="flex-1">
-            <input type="radio" name="userAnswer" value="true" class="hidden peer" required
+        <div class="space-y-3">
+          <label
+            class="group flex items-center gap-4 cursor-pointer rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-4 text-slate-800 transition-all hover:border-sky-400/40 hover:bg-sky-50">
+            <input class="h-5 w-5 rounded-full border-slate-300 bg-white text-sky-400 focus:ring-sky-400/50"
+              type="radio" name="userAnswer" value="true" required
               th:checked="${answered != null and answered == true}" />
-            <div
-              class="border-2 border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-green-50 hover:border-green-400 peer-checked:border-green-600 peer-checked:bg-green-50 transition-all">
-              <span class="text-xl font-semibold text-gray-700">✓ Verdadero</span>
+            <div class="flex-1">
+              <span class="text-base font-medium group-hover:text-sky-900">Verdadero</span>
             </div>
           </label>
-          <label class="flex-1">
-            <input type="radio" name="userAnswer" value="false" class="hidden peer" required
+          <label
+            class="group flex items-center gap-4 cursor-pointer rounded-2xl border border-slate-200/80 bg-white/70 px-6 py-4 text-slate-800 transition-all hover:border-sky-400/40 hover:bg-sky-50">
+            <input class="h-5 w-5 rounded-full border-slate-300 bg-white text-sky-400 focus:ring-sky-400/50"
+              type="radio" name="userAnswer" value="false" required
               th:checked="${answered != null and answered == false}" />
-            <div
-              class="border-2 border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-red-50 hover:border-red-400 peer-checked:border-red-600 peer-checked:bg-red-50 transition-all">
-              <span class="text-xl font-semibold text-gray-700">✗ Falso</span>
+            <div class="flex-1">
+              <span class="text-base font-medium group-hover:text-sky-900">Falso</span>
             </div>
           </label>
         </div>
 
-        <div class="flex gap-3 pt-4">
-          <button type="submit" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 font-semibold">
-            Responder
+        <div class="mt-8 flex gap-4">
+          <button type="submit"
+            class="flex-1 inline-flex items-center justify-center rounded-full bg-sky-400 px-8 py-4 text-lg font-bold text-sky-950 shadow-xl shadow-sky-500/30 transition hover:-translate-y-1 hover:bg-sky-300">
+            Confirmar Respuesta
           </button>
-          <a th:href="@{/vf/preguntas}" class="bg-gray-300 text-gray-700 px-6 py-3 rounded hover:bg-gray-400">
-            Cancelar
-          </a>
         </div>
       </form>
     </div>

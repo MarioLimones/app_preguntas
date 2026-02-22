@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.auth;
+package com.app.preguntas.funcionalidades.autenticacion;
 
 import com.app.preguntas.nucleo.UsuarioApp;
 import com.app.preguntas.funcionalidades.autenticacion.ServicioUsuarioApp;
@@ -79,6 +79,7 @@ public class ControladorApiAutenticacion {
         return ResponseEntity.status(201).body(response);
     }
 }
+
 
 
 

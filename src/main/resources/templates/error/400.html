@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/layout :: head('Error 400 - Solicitud invalida')"></head>
+
+<body class="bg-sky-50">
+    <header th:replace="fragments/layout :: header"></header>
+
+    <main class="container mx-auto p-6">
+        <div class="max-w-xl mx-auto text-center py-16">
+            <div class="text-8xl font-extrabold text-amber-300 mb-4">400</div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-3">Solicitud invalida</h1>
+            <p class="text-gray-600 mb-2">
+                La solicitud no pudo procesarse. Verifica los datos enviados e intenta de nuevo.
+            </p>
+            <p class="text-gray-400 text-sm mb-8" th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}">
+                Detalle: <span class="text-gray-500" th:text="${errorMessage}"></span>
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a th:href="@{/}" href="/"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold">
+                    Volver al Inicio
+                </a>
+                <a th:href="@{/subir}" href="/subir"
+                    class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition font-semibold">
+                    Subir preguntas
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+</body>
+
+</html>

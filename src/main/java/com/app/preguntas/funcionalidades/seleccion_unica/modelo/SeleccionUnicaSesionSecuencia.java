@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.model;
+package com.app.preguntas.funcionalidades.seleccion_unica.modelo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,6 +64,7 @@ public class SeleccionUnicaSesionSecuencia implements Serializable {
         return answers.size();
     }
 }
+
 
 
 

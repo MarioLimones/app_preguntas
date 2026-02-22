@@ -24,7 +24,11 @@ public class ApiSeleccionUnica {
     @GetMapping
     @Operation(summary = "Obtener todas las preguntas de selección única")
     public List<PreguntaSeleccionUnica> getAll() {
-        return service.findAll();
+        List<PreguntaSeleccionUnica> list = service.findAll();
+        for (PreguntaSeleccionUnica q : list) {
+            System.out.println("DEBUG OPTIONS FOR Q " + q.getId() + ": " + q.getOptions());
+        }
+        return list;
     }
 
     @GetMapping("/{id}")
@@ -60,4 +64,3 @@ public class ApiSeleccionUnica {
         return ResponseEntity.notFound().build();
     }
 }
-

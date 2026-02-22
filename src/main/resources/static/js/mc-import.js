@@ -33,7 +33,7 @@
     if (difficulty) params.set('difficulty', difficulty);
 
     try {
-      const response = await fetch(`/api/mc/questions/import?${params.toString()}`, {
+      const response = await fetch(`/api/mc/preguntas/import?${params.toString()}`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

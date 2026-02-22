@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.verdadero_falso.controller;
+package com.app.preguntas.funcionalidades.verdadero_falso.controlador;
 
 import com.app.preguntas.funcionalidades.verdadero_falso.modelo.FormularioRespuesta;
 import com.app.preguntas.funcionalidades.verdadero_falso.modelo.PreguntaVerdaderoFalso;
@@ -31,7 +31,7 @@ public class VerdaderoFalsoControladorPreguntas {
     public String list(@RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) Integer size,
             Model model) {
-        model.addAttribute("ResultadoPagina", service.findPage(page, size));
+        model.addAttribute("pageResult", service.findPage(page, size));
         return "verdadero_falso/listado";
     }
 
@@ -64,13 +64,13 @@ public class VerdaderoFalsoControladorPreguntas {
             return "redirect:/vf/preguntas";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new FormularioRespuesta());
+        model.addAttribute("answerForm", new FormularioRespuesta());
         return "verdadero_falso/detalle";
     }
 
     @PostMapping("/{id}/answer")
     public String answer(@PathVariable Long id,
-            @Valid @ModelAttribute("FormularioRespuesta") FormularioRespuesta FormularioRespuesta,
+            @Valid @ModelAttribute("answerForm") FormularioRespuesta answerForm,
             BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -83,10 +83,10 @@ public class VerdaderoFalsoControladorPreguntas {
             model.addAttribute("question", question.get());
             return "verdadero_falso/detalle";
         }
-        boolean correct = FormularioRespuesta.getUserAnswer().equals(question.get().getCorrectAnswer());
+        boolean correct = answerForm.getUserAnswer().equals(question.get().getCorrectAnswer());
         model.addAttribute("question", question.get());
         model.addAttribute("result", correct);
-        model.addAttribute("answerValue", FormularioRespuesta.getUserAnswer());
+        model.addAttribute("answerValue", answerForm.getUserAnswer());
         return "verdadero_falso/detalle";
     }
 
@@ -131,8 +131,3 @@ public class VerdaderoFalsoControladorPreguntas {
         return "redirect:/vf/preguntas";
     }
 }
-
-
-
-
-

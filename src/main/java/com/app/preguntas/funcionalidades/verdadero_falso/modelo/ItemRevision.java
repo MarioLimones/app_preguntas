@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.verdadero_falso.model;
+package com.app.preguntas.funcionalidades.verdadero_falso.modelo;
 
 public class ItemRevision {
 
@@ -25,6 +25,7 @@ public class ItemRevision {
         return userAnswer.equals(question.getCorrectAnswer());
     }
 }
+
 
 
 

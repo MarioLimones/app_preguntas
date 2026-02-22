@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../core/api/client';
-import { useAuth } from '../../core/autenticacion/AuthContext';
+import { useAuth } from '../../core/auth/AuthContext';
 import { Check, X, ArrowRight, RotateCcw, Award, HelpCircle } from 'lucide-react';
 
 const QUESTIONS_PER_PREGUNTAS = 5;
@@ -64,6 +64,40 @@ const Preguntas = () => {
         return '';
     }, [type]);
 
+    const normalizeOptions = (raw) => {
+        if (Array.isArray(raw)) return raw.filter((v) => v !== null && v !== undefined).map(String);
+        if (typeof raw === 'string') {
+            const trimmed = raw.trim();
+            if (!trimmed) return [];
+            return trimmed.split(/[\n;|]+/).map((v) => v.trim()).filter(Boolean);
+        }
+        return [];
+    };
+
+    const normalizeIndexes = (raw) => {
+        if (Array.isArray(raw)) return raw.map((v) => Number(v)).filter((v) => Number.isFinite(v));
+        if (typeof raw === 'string') {
+            return raw.split(/[\s,;|]+/).map((v) => Number(v)).filter((v) => Number.isFinite(v));
+        }
+        if (raw === null || raw === undefined) return [];
+        const n = Number(raw);
+        return Number.isFinite(n) ? [n] : [];
+    };
+
+    const normalizeQuestion = (q, qType) => {
+        const options = normalizeOptions(q.options ?? q.opciones ?? q.optionsText ?? q.opcionesText);
+        const normalized = { ...q, options };
+        if (qType === 'mc') {
+            const correctIndexes = normalizeIndexes(q.correctIndexes ?? q.correctAnswers ?? q.correctIndexesText);
+            normalized.correctIndexes = correctIndexes;
+        }
+        if (qType === 'sc' && q.correctIndex === undefined) {
+            const idx = Number(q.correctIndex ?? q.correctAnswer ?? q.correcta);
+            normalized.correctIndex = Number.isFinite(idx) ? idx : q.correctIndex;
+        }
+        return normalized;
+    };
+
     const fetchQuestions = useCallback(async () => {
         setLoading(true);
         try {
@@ -78,16 +112,19 @@ const Preguntas = () => {
             }
 
             const response = await api.get(`/${type}/preguntas`);
-            const allFetched = response.data || [];
+            const allFetched = (response.data || []).map((q) => normalizeQuestion(q, type));
 
-            // DEDUP by statement de forma eficiente
+            // DEDUP by statement prefiriendo la pregunta con mas opciones
             const uniqueQuestionsMap = new Map();
             allFetched.forEach(q => {
-                if (!uniqueQuestionsMap.has(q.statement)) {
-                    uniqueQuestionsMap.set(q.statement, q);
+                const key = q.statement || `id:${q.id}`;
+                const existing = uniqueQuestionsMap.get(key);
+                if (!existing || (q.options?.length || 0) > (existing.options?.length || 0)) {
+                    uniqueQuestionsMap.set(key, q);
                 }
             });
             const uniqueQuestionsList = Array.from(uniqueQuestionsMap.values());
+            const byId = new Map(uniqueQuestionsList.map((q) => [q.id, q]));
             const uniqueIds = uniqueQuestionsList.map(q => q.id);
 
             queue = queue.filter(id => uniqueIds.includes(id));
@@ -103,7 +140,7 @@ const Preguntas = () => {
             localStorage.setItem(storageKey, JSON.stringify(remainingQueue));
 
             const selectedQuestions = selectedIds
-                .map(id => uniqueQuestionsMap.get(uniqueQuestionsList.find(q => q.id === id)?.statement))
+                .map(id => byId.get(id))
                 .filter(Boolean);
 
             setQuestions(selectedQuestions);
@@ -177,7 +214,7 @@ const Preguntas = () => {
         try {
             await api.post('/results', {
                 username: user.username,
-                PreguntasType: type.toUpperCase(),
+                quizType: type.toUpperCase(),
                 totalQuestions: questions.length,
                 correctAnswers: optionsCorrect,
                 scorePercentage: percentage,
@@ -290,7 +327,7 @@ const Preguntas = () => {
 
                     {type === 'sc' && (
                         <div className="space-y-3">
-                            {currentQ.options.map((opt, idx) => (
+                            {(currentQ.options || []).map((opt, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => handleAnswer(idx)}
@@ -310,7 +347,7 @@ const Preguntas = () => {
 
                     {type === 'mc' && (
                         <div className="space-y-3">
-                            {currentQ.options.map((opt, idx) => {
+                            {(currentQ.options || []).map((opt, idx) => {
                                 const selected = (currentAnswer || []).includes(idx);
                                 const toggle = () => {
                                     const prev = currentAnswer || [];

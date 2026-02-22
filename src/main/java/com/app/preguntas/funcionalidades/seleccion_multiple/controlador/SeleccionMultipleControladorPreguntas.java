@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.controller;
+package com.app.preguntas.funcionalidades.seleccion_multiple.controlador;
 
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.SeleccionMultipleFormularioRespuesta;
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.PreguntaSeleccionMultiple;
@@ -36,7 +36,7 @@ public class SeleccionMultipleControladorPreguntas {
     public String list(@RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) Integer size,
             Model model) {
-        model.addAttribute("ResultadoPagina", service.findPage(page, size));
+        model.addAttribute("pageResult", service.findPage(page, size));
         return "seleccion_multiple/listado";
     }
 
@@ -71,13 +71,13 @@ public class SeleccionMultipleControladorPreguntas {
             return "redirect:/mc/preguntas";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new SeleccionMultipleFormularioRespuesta());
+        model.addAttribute("answerForm", new SeleccionMultipleFormularioRespuesta());
         return "seleccion_multiple/detalle";
     }
 
     @PostMapping("/{id}/answer")
     public String answer(@PathVariable Long id,
-            @Valid @ModelAttribute("FormularioRespuesta") SeleccionMultipleFormularioRespuesta FormularioRespuesta,
+            @Valid @ModelAttribute("answerForm") SeleccionMultipleFormularioRespuesta answerForm,
             BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -86,7 +86,7 @@ public class SeleccionMultipleControladorPreguntas {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
             return "redirect:/mc/preguntas";
         }
-        List<Integer> selected = normalizeIndexes(FormularioRespuesta.getSelectedIndexes());
+        List<Integer> selected = normalizeIndexes(answerForm.getSelectedIndexes());
         if (!isValidAnswer(selected, question.get())) {
             bindingResult.rejectValue("selectedIndexes", "invalid", "Selecciona opciones validas.");
         }
@@ -147,7 +147,8 @@ public class SeleccionMultipleControladorPreguntas {
         return "redirect:/mc/preguntas";
     }
 
-    private List<String> validateAndParseOptions(SeleccionMultipleFormularioPregunta form, BindingResult bindingResult) {
+    private List<String> validateAndParseOptions(SeleccionMultipleFormularioPregunta form,
+            BindingResult bindingResult) {
         List<String> options = parseOptions(form.getOptionsText());
         if (options.size() < 2) {
             bindingResult.rejectValue("optionsText", "min", "Debes ingresar al menos dos opciones.");
@@ -324,8 +325,3 @@ public class SeleccionMultipleControladorPreguntas {
         return builder.toString();
     }
 }
-
-
-
-
-

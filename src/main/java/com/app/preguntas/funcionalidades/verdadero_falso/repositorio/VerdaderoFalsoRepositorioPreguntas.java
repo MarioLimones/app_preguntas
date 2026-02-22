@@ -9,3 +9,6 @@ import java.util.Optional;
 public interface VerdaderoFalsoRepositorioPreguntas extends JpaRepository<PreguntaVerdaderoFalso, Long> {
     Optional<PreguntaVerdaderoFalso> findFirstByIdGreaterThanOrderByIdAsc(Long id);
 }
+
+
+

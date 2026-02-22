@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.service;
+package com.app.preguntas.funcionalidades.seleccion_unica.servicio;
 
 import com.app.preguntas.funcionalidades.seleccion_unica.modelo.PreguntaSeleccionUnica;
 
@@ -36,6 +36,8 @@ public class SeleccionUnicaQuestionImportResult {
         return Collections.unmodifiableList(errors);
     }
 }
+
+
 
 
 

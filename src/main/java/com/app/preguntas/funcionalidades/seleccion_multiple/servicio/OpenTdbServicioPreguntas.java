@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.service;
+package com.app.preguntas.funcionalidades.seleccion_multiple.servicio;
 
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.PreguntaSeleccionMultiple;
 
@@ -39,15 +39,15 @@ public class OpenTdbServicioPreguntas {
     }
 
     public List<PreguntaSeleccionMultiple> fetchSeleccionMultipleQuestions(int amount,
-            Integer Categoria,
+            Integer category,
             String difficulty) {
         int boundedAmount = Math.max(1, Math.min(amount, MAX_AMOUNT));
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .queryParam("amount", boundedAmount)
                 .queryParam("type", "multiple");
 
-        if (Categoria != null) {
-            builder.queryParam("Categoria", Categoria);
+        if (category != null) {
+            builder.queryParam("category", category);
         }
         if (difficulty != null && !difficulty.isBlank()) {
             builder.queryParam("difficulty", difficulty.trim().toLowerCase());
@@ -122,7 +122,7 @@ public class OpenTdbServicioPreguntas {
         }
 
         String explanation = "Fuente: Open Trivia DB"
-                + (question.Categoria() != null ? " | Categoria: " + HtmlUtils.htmlUnescape(question.Categoria()) : "")
+                + (question.category() != null ? " | Categoria: " + HtmlUtils.htmlUnescape(question.category()) : "")
                 + (question.difficulty() != null ? " | Dificultad: " + HtmlUtils.htmlUnescape(question.difficulty())
                         : "");
 
@@ -134,7 +134,3 @@ public class OpenTdbServicioPreguntas {
                 explanation);
     }
 }
-
-
-
-

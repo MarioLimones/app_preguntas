@@ -1,8 +1,8 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.servicio;
+package com.app.preguntas.funcionalidades.verdadero_falso.servicio;
 
 import com.app.preguntas.nucleo.ResultadoPagina;
-import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.PreguntaSeleccionMultiple;
-import com.app.preguntas.funcionalidades.seleccion_multiple.repositorio.SeleccionMultipleRepositorioPreguntas;
+import com.app.preguntas.funcionalidades.verdadero_falso.modelo.PreguntaVerdaderoFalso;
+import com.app.preguntas.funcionalidades.verdadero_falso.repositorio.VerdaderoFalsoRepositorioPreguntas;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -13,38 +13,38 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class SeleccionMultipleServicioPreguntas {
+public class VerdaderoFalsoServicioPreguntas {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
-    private final SeleccionMultipleRepositorioPreguntas repository;
+    private final VerdaderoFalsoRepositorioPreguntas repository;
 
-    public SeleccionMultipleServicioPreguntas(SeleccionMultipleRepositorioPreguntas repository) {
+    public VerdaderoFalsoServicioPreguntas(VerdaderoFalsoRepositorioPreguntas repository) {
         this.repository = repository;
     }
 
-    public ResultadoPagina<PreguntaSeleccionMultiple> findPage(int page, Integer size) {
+    public ResultadoPagina<PreguntaVerdaderoFalso> findPage(int page, Integer size) {
         int pageSize = (size != null && size > 0) ? size : DEFAULT_PAGE_SIZE;
-        Page<PreguntaSeleccionMultiple> springPage = repository.findAll(PageRequest.of(page, pageSize, Sort.by("id")));
-        return new ResultadoPagina<>(springPage.getContent(), springPage.getTotalElements(), page, pageSize);
+        Page<PreguntaVerdaderoFalso> springPage = repository.findAll(PageRequest.of(page, pageSize, Sort.by("id")));
+        return new ResultadoPagina<>(springPage.getContent(), (int) springPage.getTotalElements(), page, pageSize);
     }
 
     public long count() {
         return repository.count();
     }
 
-    public List<PreguntaSeleccionMultiple> findAll() {
+    public List<PreguntaVerdaderoFalso> findAll() {
         return repository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
-    public Optional<PreguntaSeleccionMultiple> findById(Long id) {
+    public Optional<PreguntaVerdaderoFalso> findById(Long id) {
         return repository.findById(id);
     }
 
-    public PreguntaSeleccionMultiple create(PreguntaSeleccionMultiple input) {
+    public PreguntaVerdaderoFalso create(PreguntaVerdaderoFalso input) {
         return repository.save(input);
     }
 
-    public Optional<PreguntaSeleccionMultiple> update(Long id, PreguntaSeleccionMultiple input) {
+    public Optional<PreguntaVerdaderoFalso> update(Long id, PreguntaVerdaderoFalso input) {
         if (id == null || !repository.existsById(id)) {
             return Optional.empty();
         }
@@ -60,33 +60,42 @@ public class SeleccionMultipleServicioPreguntas {
         return false;
     }
 
-    public Optional<PreguntaSeleccionMultiple> getRandom() {
+    public Optional<PreguntaVerdaderoFalso> getRandom() {
         long total = repository.count();
         if (total == 0) {
             return Optional.empty();
         }
         int randomIndex = ThreadLocalRandom.current().nextInt((int) total);
-        Page<PreguntaSeleccionMultiple> page = repository.findAll(PageRequest.of(randomIndex, 1));
+        Page<PreguntaVerdaderoFalso> page = repository.findAll(PageRequest.of(randomIndex, 1));
         return page.hasContent() ? Optional.of(page.getContent().get(0)) : Optional.empty();
     }
 
-    public Optional<PreguntaSeleccionMultiple> getNext(Long currentId) {
+    public Optional<PreguntaVerdaderoFalso> getNext(Long currentId) {
         if (currentId == null) {
-            Page<PreguntaSeleccionMultiple> first = repository.findAll(PageRequest.of(0, 1, Sort.by("id")));
+            Page<PreguntaVerdaderoFalso> first = repository.findAll(PageRequest.of(0, 1, Sort.by("id")));
             return first.hasContent() ? Optional.of(first.getContent().get(0)) : Optional.empty();
         }
 
+        // Find the first one with ID > currentId
         return repository.findFirstByIdGreaterThanOrderByIdAsc(currentId)
                 .or(() -> {
-                    Page<PreguntaSeleccionMultiple> first = repository.findAll(PageRequest.of(0, 1, Sort.by("id")));
+                    // If none found, wrap around to the first one
+                    Page<PreguntaVerdaderoFalso> first = repository.findAll(PageRequest.of(0, 1, Sort.by("id")));
                     return first.hasContent() ? Optional.of(first.getContent().get(0)) : Optional.empty();
                 });
     }
 
     public List<Long> getAllIdsSorted() {
+        // This is still potentially memory intensive, but if needed for small sets it's
+        // okay.
+        // For true optimization, we should use a projection to only fetch IDs.
         return repository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
-                .map(PreguntaSeleccionMultiple::getId)
+                .map(PreguntaVerdaderoFalso::getId)
                 .toList();
     }
 }
+
+
+
+

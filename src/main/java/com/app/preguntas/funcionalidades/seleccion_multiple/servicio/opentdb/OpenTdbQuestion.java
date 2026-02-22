@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public record OpenTdbQuestion(
-    @JsonProperty("Categoria") String Categoria,
+    @JsonProperty("category") String category,
     @JsonProperty("type") String type,
     @JsonProperty("difficulty") String difficulty,
     @JsonProperty("question") String question,

@@ -1,0 +1,327 @@
+{
+    "VerdaderoFalso": [
+        {
+            "statement": "El Mundial de 2010 se jugó en Sudáfrica y lo ganó España.",
+            "correctAnswer": true,
+            "explanation": "España venció a Holanda en la final con un gol de Andrés Iniesta en tiempo extra."
+        },
+        {
+            "statement": "La Juventus es el equipo con más Ligas de Campeones de la UEFA ganadas.",
+            "correctAnswer": false,
+            "explanation": "El equipo con más títulos de Champions League es el Real Madrid."
+        },
+        {
+            "statement": "Diego Maradona anotó el famoso gol de 'La Mano de Dios' contra Inglaterra.",
+            "correctAnswer": true,
+            "explanation": "Fue en los cuartos de final del Mundial de México 1986."
+        },
+        {
+            "statement": "Un partido de fútbol estándar dura 120 minutos sin contar el alargue.",
+            "correctAnswer": false,
+            "explanation": "El tiempo reglamentario es de 90 minutos, dividido en dos tiempos de 45."
+        },
+        {
+            "statement": "Lionel Messi ha ganado más Balones de Oro que Cristiano Ronaldo.",
+            "correctAnswer": true,
+            "explanation": "Messi tiene el récord absoluto de ganadores del Balón de Oro."
+        },
+        {
+            "statement": "Se marca fuera de juego (offside) en un saque de banda.",
+            "correctAnswer": false,
+            "explanation": "Las reglas establecen que no hay posición de fuera de juego directo desde un saque de banda."
+        },
+        {
+            "statement": "El Estadio Camp Nou es la casa del equipo FC Barcelona.",
+            "correctAnswer": true,
+            "explanation": "Es el estadio del FC Barcelona y uno de los más grandes del mundo."
+        },
+        {
+            "statement": "Pelé ganó tres Copas del Mundo con la selección nacional de Brasil.",
+            "correctAnswer": true,
+            "explanation": "Logró levantar la copa en los torneos de 1958, 1962 y 1970."
+        },
+        {
+            "statement": "El Liverpool Football Club está ubicado en la ciudad de Londres.",
+            "correctAnswer": false,
+            "explanation": "El club está radicado en la ciudad de Liverpool, no en Londres."
+        },
+        {
+            "statement": "La tarjeta roja resulta en la expulsión inmediata de un jugador del partido.",
+            "correctAnswer": true,
+            "explanation": "Un jugador amonestado con tarjeta roja debe abandonar el campo sin ser sustituido."
+        }
+    ],
+    "SeleccionUnica": [
+        {
+            "statement": "¿Qué selección nacional ha ganado más Copas del Mundo de la FIFA?",
+            "options": [
+                "Brasil",
+                "Alemania",
+                "Italia",
+                "Argentina"
+            ],
+            "correctIndex": 0,
+            "explanation": "Brasil lidera el palmarés histórico mundial con 5 títulos."
+        },
+        {
+            "statement": "¿Qué equipo ganó la UEFA Champions League en la temporada 2022-2023?",
+            "options": [
+                "Real Madrid",
+                "Manchester City",
+                "Bayern Múnich",
+                "Liverpool"
+            ],
+            "correctIndex": 1,
+            "explanation": "Manchester City ganó la final ante el Inter de Milán."
+        },
+        {
+            "statement": "¿Quién es el máximo goleador histórico de la Liga de Campeones de la UEFA?",
+            "options": [
+                "Lionel Messi",
+                "Robert Lewandowski",
+                "Cristiano Ronaldo",
+                "Raúl González"
+            ],
+            "correctIndex": 2,
+            "explanation": "Cristiano Ronaldo es el líder de goleo en esta competición europea."
+        },
+        {
+            "statement": "¿En qué país de Europa compite el Bayern Múnich?",
+            "options": [
+                "Inglaterra",
+                "España",
+                "Alemania",
+                "Francia"
+            ],
+            "correctIndex": 2,
+            "explanation": "Es una de las fuerzas dominantes de la Bundesliga alemana."
+        },
+        {
+            "statement": "¿Cuál es el nombre del estadio donde juega el Real Madrid como local?",
+            "options": [
+                "Camp Nou",
+                "Santiago Bernabéu",
+                "San Siro",
+                "Old Trafford"
+            ],
+            "correctIndex": 1,
+            "explanation": "Es el imponente Estadio Santiago Bernabéu en Madrid."
+        },
+        {
+            "statement": "¿Qué país ganó la Copa del Mundo de la FIFA celebrada en 2022?",
+            "options": [
+                "Francia",
+                "Croacia",
+                "Argentina",
+                "Brasil"
+            ],
+            "correctIndex": 2,
+            "explanation": "Argentina venció a Francia en una emocionante definición por penales."
+        },
+        {
+            "statement": "¿Cuál es la duración reglamentaria de un partido de fútbol (sin alargue)?",
+            "options": [
+                "80 minutos",
+                "90 minutos",
+                "100 minutos",
+                "120 minutos"
+            ],
+            "correctIndex": 1,
+            "explanation": "El juego se divide en dos mitades de 45 minutos."
+        },
+        {
+            "statement": "¿Qué equipo del fútbol inglés es mundialmente conocido como 'Los Diablos Rojos'?",
+            "options": [
+                "Arsenal",
+                "Chelsea",
+                "Liverpool",
+                "Manchester United"
+            ],
+            "correctIndex": 3,
+            "explanation": "El histórico club Manchester United es apodado The Red Devils."
+        },
+        {
+            "statement": "¿Quién ganó el Balón de Oro en el año 2007 (antes de la hegemonía Messi-CR7)?",
+            "options": [
+                "Kaká",
+                "Ronaldinho",
+                "Fabio Cannavaro",
+                "Zinedine Zidane"
+            ],
+            "correctIndex": 0,
+            "explanation": "Kaká lo ganó por sus increíbles temporadas con el AC Milan."
+        },
+        {
+            "statement": "¿En qué ciudad sudamericana se encuentra el mítico estadio 'La Bombonera'?",
+            "options": [
+                "Buenos Aires",
+                "São Paulo",
+                "Montevideo",
+                "Río de Janeiro"
+            ],
+            "correctIndex": 0,
+            "explanation": "Es la casa del Club Atlético Boca Juniors en Buenos Aires, Argentina."
+        }
+    ],
+    "SeleccionMultiple": [
+        {
+            "statement": "¿Cuáles de los siguientes equipos han ganado la Copa Libertadores de América?",
+            "options": [
+                "Boca Juniors",
+                "River Plate",
+                "Cruz Azul",
+                "Flamengo",
+                "LA Galaxy"
+            ],
+            "correctIndexes": [
+                0,
+                1,
+                3
+            ],
+            "explanation": "Boca, River y Flamengo son múltiples campeones del histórico torneo sudamericano."
+        },
+        {
+            "statement": "¿Qué países han sido anfitriones de una Copa Mundial de la FIFA en al menos dos ocasiones (incluyendo sedes compartidas futuras)?",
+            "options": [
+                "México",
+                "España",
+                "Italia",
+                "Francia",
+                "Argentina"
+            ],
+            "correctIndexes": [
+                0,
+                2,
+                3
+            ],
+            "explanation": "México, Italia y Francia han repetido sede (y México va a tener su tercer mundial pronto)."
+        },
+        {
+            "statement": "¿Qué jugadores conformaron el famoso tridente de ataque 'MSN' del Barcelona?",
+            "options": [
+                "Lionel Messi",
+                "Luis Suárez",
+                "Alexis Sánchez",
+                "Neymar Jr",
+                "Pedro Rodríguez"
+            ],
+            "correctIndexes": [
+                0,
+                1,
+                3
+            ],
+            "explanation": "Messi, Suárez y Neymar formaron una de las delanteras más letales."
+        },
+        {
+            "statement": "¿Cuáles de los siguientes porteros lograron ganar una Copa del Mundo con su selección?",
+            "options": [
+                "Iker Casillas",
+                "Gianluigi Buffon",
+                "Manuel Neuer",
+                "Oliver Kahn",
+                "Edwin van der Sar"
+            ],
+            "correctIndexes": [
+                0,
+                1,
+                2
+            ],
+            "explanation": "Casillas (2010), Buffon (2006) y Neuer (2014) ya son campeones del mundo."
+        },
+        {
+            "statement": "Selecciona los clubes que compiten en la Premier League de Inglaterra:",
+            "options": [
+                "Newcastle United",
+                "AS Roma",
+                "Tottenham Hotspur",
+                "Everton",
+                "Sevilla"
+            ],
+            "correctIndexes": [
+                0,
+                2,
+                3
+            ],
+            "explanation": "Roma y Sevilla juegan en Italia y España respectivamente."
+        },
+        {
+            "statement": "¿Qué selecciones nacionales sudamericanas han logrado ganar al menos un Mundial?",
+            "options": [
+                "Brasil",
+                "Colombia",
+                "Argentina",
+                "Chile",
+                "Uruguay"
+            ],
+            "correctIndexes": [
+                0,
+                2,
+                4
+            ],
+            "explanation": "Solo Brasil, Argentina y Uruguay tienen al menos una estrella de campeón."
+        },
+        {
+            "statement": "¿Cuáles de estos reconocidos jugadores son de nacionalidad española?",
+            "options": [
+                "Andrés Iniesta",
+                "Xavi Hernández",
+                "Andrea Pirlo",
+                "Sergio Ramos",
+                "Luka Modrić"
+            ],
+            "correctIndexes": [
+                0,
+                1,
+                3
+            ],
+            "explanation": "Pirlo es italiano y Modrić es croata."
+        },
+        {
+            "statement": "Selecciona los colores tradicionales de la camiseta del equipo AC Milan:",
+            "options": [
+                "Rojo",
+                "Azul",
+                "Negro",
+                "Blanco",
+                "Amarillo"
+            ],
+            "correctIndexes": [
+                0,
+                2
+            ],
+            "explanation": "Los apodan I Rossoneri (Los rojo y negros)."
+        },
+        {
+            "statement": "¿Cuáles de los siguientes torneos corresponden estrictamente a competiciones de selecciones nacionales?",
+            "options": [
+                "Copa América",
+                "UEFA Champions League",
+                "Eurocopa",
+                "Copa Libertadores",
+                "Copa África de Naciones"
+            ],
+            "correctIndexes": [
+                0,
+                2,
+                4
+            ],
+            "explanation": "La Champions y la Libertadores son competiciones de clubes."
+        },
+        {
+            "statement": "¿Qué famosos estadios de fútbol se encuentran ubicados en el Reino Unido?",
+            "options": [
+                "Wembley",
+                "Anfield",
+                "Allianz Arena",
+                "Stamford Bridge",
+                "Parc des Princes"
+            ],
+            "correctIndexes": [
+                0,
+                1,
+                3
+            ],
+            "explanation": "Allianz Arena está en Alemania y Parc des Princes en Francia."
+        }
+    ]
+}

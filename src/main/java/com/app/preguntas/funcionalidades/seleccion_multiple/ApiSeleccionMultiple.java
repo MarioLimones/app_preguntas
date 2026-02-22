@@ -30,9 +30,9 @@ public class ApiSeleccionMultiple {
     @Operation(summary = "Importar preguntas desde OpenTDB")
     public List<PreguntaSeleccionMultiple> importQuestions(
             @RequestParam(defaultValue = "5") int amount,
-            @RequestParam(required = false) Integer Categoria,
+            @RequestParam(required = false) Integer category,
             @RequestParam(required = false) String difficulty) {
-        List<PreguntaSeleccionMultiple> questions = openTdbService.fetchSeleccionMultipleQuestions(amount, Categoria,
+        List<PreguntaSeleccionMultiple> questions = openTdbService.fetchSeleccionMultipleQuestions(amount, category,
                 difficulty);
         for (PreguntaSeleccionMultiple q : questions) {
             service.create(q);
@@ -79,4 +79,3 @@ public class ApiSeleccionMultiple {
         return ResponseEntity.notFound().build();
     }
 }
-

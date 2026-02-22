@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_unica.controller;
+package com.app.preguntas.funcionalidades.seleccion_unica.controlador;
 
 import com.app.preguntas.funcionalidades.seleccion_unica.modelo.SeleccionUnicaFormularioRespuesta;
 import com.app.preguntas.funcionalidades.seleccion_unica.modelo.PreguntaSeleccionUnica;
@@ -42,7 +42,7 @@ public class SeleccionUnicaControladorPreguntas {
     public String list(@RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) Integer size,
             Model model) {
-        model.addAttribute("ResultadoPagina", service.findPage(page, size));
+        model.addAttribute("pageResult", service.findPage(page, size));
         return "seleccion_unica/listado";
     }
 
@@ -77,13 +77,13 @@ public class SeleccionUnicaControladorPreguntas {
             return "redirect:/sc/preguntas";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new SeleccionUnicaFormularioRespuesta());
+        model.addAttribute("answerForm", new SeleccionUnicaFormularioRespuesta());
         return "seleccion_unica/detalle";
     }
 
     @PostMapping("/{id}/answer")
     public String answer(@PathVariable Long id,
-            @Valid @ModelAttribute("FormularioRespuesta") SeleccionUnicaFormularioRespuesta FormularioRespuesta,
+            @Valid @ModelAttribute("answerForm") SeleccionUnicaFormularioRespuesta answerForm,
             BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes) {
@@ -92,17 +92,17 @@ public class SeleccionUnicaControladorPreguntas {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
             return "redirect:/sc/preguntas";
         }
-        if (!isValidAnswer(FormularioRespuesta.getSelectedIndex(), question.get())) {
+        if (!isValidAnswer(answerForm.getSelectedIndex(), question.get())) {
             bindingResult.rejectValue("selectedIndex", "invalid", "Selecciona una opcion valida.");
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("question", question.get());
             return "seleccion_unica/detalle";
         }
-        boolean correct = FormularioRespuesta.getSelectedIndex().equals(question.get().getCorrectIndex());
+        boolean correct = answerForm.getSelectedIndex().equals(question.get().getCorrectIndex());
         model.addAttribute("question", question.get());
         model.addAttribute("result", correct);
-        model.addAttribute("answerValue", FormularioRespuesta.getSelectedIndex());
+        model.addAttribute("answerValue", answerForm.getSelectedIndex());
         return "seleccion_unica/detalle";
     }
 
@@ -200,7 +200,8 @@ public class SeleccionUnicaControladorPreguntas {
         return correctIndex - 1;
     }
 
-    private PreguntaSeleccionUnica toQuestion(SeleccionUnicaFormularioPregunta form, List<String> options, Integer correctIndex) {
+    private PreguntaSeleccionUnica toQuestion(SeleccionUnicaFormularioPregunta form, List<String> options,
+            Integer correctIndex) {
         PreguntaSeleccionUnica question = new PreguntaSeleccionUnica();
         question.setStatement(form.getStatement());
         question.setOptions(options);
@@ -266,8 +267,3 @@ public class SeleccionUnicaControladorPreguntas {
         return selectedIndex >= 0 && selectedIndex < question.getOptions().size();
     }
 }
-
-
-
-
-

@@ -74,9 +74,9 @@ public class SecurityConfig {
                         // Static resources
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/examples/**", "/favicon.ico").permitAll()
                         // Error pages
-                        .requestMatchers("/error", "/debug/**").permitAll()
+                        .requestMatchers("/error").permitAll()
                         // Thymeleaf pages require authentication
-                        .requestMatchers("/", "/vf/**", "/sc/**", "/mc/**", "/upload/**").permitAll()
+                        .requestMatchers("/", "/vf/**", "/sc/**", "/mc/**", "/subir/**", "/categories/**").permitAll()
                         // Admin API (write operations)
                         .requestMatchers(HttpMethod.POST, "/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("ADMIN")

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../../core/autenticacion/AuthContext';
+import { useAuth } from '../../core/auth/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 

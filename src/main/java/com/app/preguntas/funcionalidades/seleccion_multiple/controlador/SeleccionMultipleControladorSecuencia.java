@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.controller;
+package com.app.preguntas.funcionalidades.seleccion_multiple.controlador;
 
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.SeleccionMultipleFormularioRespuesta;
 import com.app.preguntas.funcionalidades.seleccion_multiple.modelo.PreguntaSeleccionMultiple;
@@ -61,7 +61,7 @@ public class SeleccionMultipleControladorSecuencia {
             return "redirect:/mc/secuencia/start";
         }
         model.addAttribute("question", question.get());
-        model.addAttribute("FormularioRespuesta", new SeleccionMultipleFormularioRespuesta());
+        model.addAttribute("answerForm", new SeleccionMultipleFormularioRespuesta());
         model.addAttribute("sequence", sequence);
         model.addAttribute("answered", buildDisplay(sequence.getAnswers().get(questionId)));
         return "seleccion_multiple/secuencia";
@@ -69,7 +69,7 @@ public class SeleccionMultipleControladorSecuencia {
 
     @PostMapping("/answer")
     public String answer(@RequestParam Long questionId,
-                         @Valid @ModelAttribute("FormularioRespuesta") SeleccionMultipleFormularioRespuesta FormularioRespuesta,
+                         @Valid @ModelAttribute("answerForm") SeleccionMultipleFormularioRespuesta answerForm,
                          BindingResult bindingResult,
                          HttpSession session,
                          Model model,
@@ -84,7 +84,7 @@ public class SeleccionMultipleControladorSecuencia {
             redirectAttributes.addFlashAttribute("error", "La pregunta no existe.");
             return "redirect:/mc/secuencia";
         }
-        List<Integer> selected = normalizeIndexes(FormularioRespuesta.getSelectedIndexes());
+        List<Integer> selected = normalizeIndexes(answerForm.getSelectedIndexes());
         if (!isValidAnswer(selected, question.get())) {
             bindingResult.rejectValue("selectedIndexes", "invalid", "Selecciona opciones validas.");
         }
@@ -212,6 +212,10 @@ public class SeleccionMultipleControladorSecuencia {
         return builder.toString();
     }
 }
+
+
+
+
 
 
 

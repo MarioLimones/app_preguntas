@@ -1,4 +1,4 @@
-package com.app.preguntas.funcionalidades.seleccion_multiple.model;
+package com.app.preguntas.funcionalidades.seleccion_multiple.modelo;
 
 import jakarta.validation.constraints.NotEmpty;
 
@@ -18,6 +18,7 @@ public class SeleccionMultipleFormularioRespuesta {
         this.selectedIndexes = selectedIndexes != null ? selectedIndexes : new ArrayList<>();
     }
 }
+
 
 
 

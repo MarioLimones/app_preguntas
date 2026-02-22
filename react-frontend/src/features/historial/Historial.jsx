@@ -27,6 +27,12 @@ const Historial = () => {
         fetchResults();
     }, [user.username]);
 
+    const getCompletedDate = (result) => {
+        const raw = result.completedAt || result.createdAt || result.date;
+        const d = raw ? new Date(raw) : null;
+        return d && !Number.isNaN(d.getTime()) ? d : new Date();
+    };
+
     if (loading) return (
         <div className="flex justify-center items-center h-64">
             <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
@@ -59,8 +65,9 @@ const Historial = () => {
                 </div>
             ) : (
                 <div className="space-y-4">
-                    {results.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt)).map((result) => {
+                    {results.sort((a, b) => getCompletedDate(b) - getCompletedDate(a)).map((result) => {
                         const quizType = result.quizType || result.PreguntasType || '';
+                        const completedDate = getCompletedDate(result);
                         return (
                             <div key={result.id} className="group bg-white rounded-[2rem] shadow-sm border border-gray-100 hover:border-indigo-100 hover:shadow-xl hover:shadow-indigo-50 transition-all duration-300 cursor-pointer overflow-hidden" onClick={() => toggleExpand(result.id)}>
                                 <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
@@ -79,7 +86,7 @@ const Historial = () => {
                                                 <div className="w-1 h-1 rounded-full bg-gray-300" />
                                                 <span className="text-[10px] text-gray-400 font-bold flex items-center gap-1">
                                                     <Clock className="w-3 h-3" />
-                                                    {new Date(result.completedAt).toLocaleDateString()}
+                                                    {completedDate.toLocaleDateString()}
                                                 </span>
                                             </div>
                                             <p className="text-xs text-gray-400 font-medium">

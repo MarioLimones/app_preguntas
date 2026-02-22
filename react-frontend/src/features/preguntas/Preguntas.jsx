@@ -25,7 +25,7 @@ const ResultItem = memo(({ q, idx, isCorrect, type, explanation }) => (
                 {isCorrect ? <Check className="w-5 h-5" /> : <X className="w-5 h-5" />}
             </div>
             <div className="flex-1">
-                <p className="text-gray-900 font-bold mb-2">{idx + 1}. {q.statement}</p>
+                <p className="text-gray-900 font-bold mb-2 whitespace-pre-line break-words">{idx + 1}. {q.statement}</p>
                 {!isCorrect && (
                     <div className="text-sm bg-white/50 p-3 rounded-xl border border-rose-100 mt-2">
                         <span className="text-rose-600 font-bold block mb-1">Respuesta correcta:</span>
@@ -37,7 +37,7 @@ const ResultItem = memo(({ q, idx, isCorrect, type, explanation }) => (
                     </div>
                 )}
                 {q.explanation && (
-                    <p className="text-xs text-gray-500 mt-3 italic bg-gray-50 p-2 rounded-lg">{q.explanation}</p>
+                    <p className="text-xs text-gray-500 mt-3 italic bg-gray-50 p-2 rounded-lg whitespace-pre-line break-words">{q.explanation}</p>
                 )}
             </div>
         </div>
@@ -305,7 +305,7 @@ const Preguntas = () => {
             />
 
             <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl shadow-indigo-100/30 min-h-[400px] flex flex-col border border-indigo-50">
-                <h2 className="text-2xl font-bold mb-10 text-gray-900 leading-tight">{currentQ.statement}</h2>
+                <h2 className="text-2xl font-bold mb-10 text-gray-900 leading-tight whitespace-pre-line break-words">{currentQ.statement}</h2>
 
                 <div className="flex-1 space-y-4">
                     {type === 'vf' && (
@@ -339,7 +339,7 @@ const Preguntas = () => {
                                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 text-sm ${currentAnswer === idx ? 'bg-white/20' : 'bg-gray-100 text-gray-400'}`}>
                                         {String.fromCharCode(65 + idx)}
                                     </div>
-                                    {opt}
+                                    <span className="whitespace-pre-line break-words">{opt}</span>
                                 </button>
                             ))}
                         </div>
@@ -366,7 +366,7 @@ const Preguntas = () => {
                                         <div className={`w-6 h-6 border-2 rounded-lg flex items-center justify-center shrink-0 ${selected ? 'bg-white border-white text-indigo-600' : 'bg-transparent border-gray-200'}`}>
                                             {selected && <Check className="w-4 h-4 font-black" />}
                                         </div>
-                                        {opt}
+                                        <span className="whitespace-pre-line break-words">{opt}</span>
                                     </button>
                                 );
                             })}
